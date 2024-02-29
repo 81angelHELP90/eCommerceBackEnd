@@ -1,0 +1,15 @@
+{
+  "name": "ecommercebackend",
+  "version": "1.0.0",
+  "description": "e-commerce backEnd",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "author": "Angelus",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
