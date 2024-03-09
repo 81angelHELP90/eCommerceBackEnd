@@ -1,25 +1,86 @@
-const express = require("express");
-const app = express();
+class ProductManager{
 
-//Setter port
-app.set("PORT", process.env.PORT || 6666);
+    constructor(){
+        this.objProduct = {
+            title: "",
+            description: "",
+            price: "",
+            thumbnail: "",
+            code: "",
+            stock: ""
+        }
 
-//Middelwares
-app.use(express.json());
-//Format data:
-app.use(express.urlencoded({extended: true}));
+        this.listProducts = [];
+    }
 
-// Configurar cabeceras y cors
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-    next();
-});
+    addProduct(newProduct){
+        let validated = validations(newProduct, this.listProducts)
 
-let number = null
+        if(validated.ok){
+            newProduct.id = Math.floor(Math.random() * (1000 - 1) + 1) //valor seudo-aleatorio entre 1 y 999
+            this.listProducts.push(newProduct);
+            console.log(`${newProduct.title}: producto agregado`);
+        } else 
+            console.log((validated.property.includes("Error")) ? `${newProduct.title}: El codigo de producto ya existe!` : `${newProduct.title}: El campo ${validated.property} es obligatorio.`);
+    }
 
-console.log(typeof number)
+    getProducts(){
+        return this.listProducts;
+    }
 
-app.listen(app.get("port"), () => { console.log("ecommerce-backend run in port ", app.get("PORT")) });
+    getProductById(code){
+        let productFound = this.listProducts.filter(product => product.code === code);
+
+        if(this.listProducts.length === 0 || productFound.length === 0)
+            return "Not found"
+        else 
+            return productFound;
+    } 
+}
+
+//VALIDACIONES:
+const validations = (newProduct, listProducts) => {
+    let keys = Object.keys(newProduct);
+    let values = Object.values(newProduct);
+    let validated = {ok: true, property: ""};
+    let uniqueCode = listProducts.findIndex(product => product.code === newProduct.code);
+
+    if(uniqueCode !== -1)
+        return {ok: false, property: "Code Error"};
+
+    values.forEach((value, i) => {
+        if(value === "")
+            validated = {ok: false, property: keys[i]};
+    });
+
+    return validated;
+}
+
+/*EJEMPLO EJECUCIÓN
+const Product1 = new ProductManager();
+const Product2 = new ProductManager();
+
+Product1.addProduct({
+    title: "producto1",
+    description: "producto 1 de la tienda",
+    price: "55,90",
+    thumbnail: "https://pathProduct1_img.svg",
+    "code": "123",
+    "stock": "30"
+})
+
+Product2.addProduct({
+    title: "producto2",
+    description: "producto 2 de la tienda",
+    price: "75,90",
+    thumbnail: "https://pathProduct1_img.svg",
+    "code": "124",
+    "stock": "34"
+})
+
+//OBTENER TODOS PRODUCTOS:
+//console.log(Product1.getProducts());
+
+//OBTENER UN PRODUCTO:
+//console.log(Product1.getProductById(235));
+*/
