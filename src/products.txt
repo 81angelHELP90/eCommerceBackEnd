@@ -1,0 +1,20 @@
+[
+   {
+      "title": "Producto 1",
+      "description": "Descripción producto 1",
+      "price": "99,99",
+      "thumbnail": "https://pathProduct1_img.svg",
+      "code": "767",
+      "stock": "35",
+      "id": 405
+   },
+   {
+      "title": "producto3",
+      "description": "producto 3 de la tienda",
+      "price": "44,90",
+      "thumbnail": "https://pathProduct3_img.svg",
+      "code": "267",
+      "stock": "343",
+      "id": 733
+   }
+]
