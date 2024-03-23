@@ -2,11 +2,12 @@ const express = require("express");
 const app = express();
 
 //Setter port
-app.set("PORT", process.env.PORT || 6666);
+app.set("PORT", process.env.PORT || 8080);
 
 //Middelwares
 app.use(express.json());
-//Format data:
+
+//Format data
 app.use(express.urlencoded({extended: true}));
 
 // Configurar cabeceras y cors
@@ -17,9 +18,5 @@ app.use((req, res, next) => {
     res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
-
-let number = null
-
-console.log(typeof number)
 
 app.listen(app.get("port"), () => { console.log("ecommerce-backend run in port ", app.get("PORT")) });
