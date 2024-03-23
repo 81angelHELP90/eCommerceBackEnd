@@ -1,0 +1,29 @@
+[
+   {
+      "title": "producto1",
+      "description": "producto 1 de la tienda",
+      "price": "55,90",
+      "thumbnail": "https://pathProduct1_img.svg",
+      "code": "767",
+      "stock": "35",
+      "id": 291
+   },
+   {
+      "title": "producto2",
+      "description": "producto 2 de la tienda",
+      "price": "75,90",
+      "thumbnail": "https://pathProduct1_img.svg",
+      "code": "124",
+      "stock": "34",
+      "id": 48
+   },
+   {
+      "title": "producto3",
+      "description": "producto 3 de la tienda",
+      "price": "44,90",
+      "thumbnail": "https://pathProduct3_img.svg",
+      "code": "267",
+      "stock": "343",
+      "id": 483
+   }
+]
