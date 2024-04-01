@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const productManager = require("./productManagerHelper");
-const Product = new productManager("./products.txt");
+const productsRouter = require('./routers/products.router.js');
+//const cartsRouter = require('./routers/carts.router.js');
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -12,32 +12,11 @@ app.use((req, res, next) => {
     next();
 });
 
-//Endpoints
-app.get("/products", async (req, res) => {
-    const listProducts = await Product.getProducts();
-    let { limit } = req.query;
-    
-    if(isNaN(parseInt(limit))) {
-        (listProducts.Error) ? res.json({ status: 500, Message: listProducts.Error }) : res.json({ status: 200, products: listProducts });
-    } else {
-        if(parseInt(limit) < 0 || parseInt(limit) > listProducts.length) 
-            res.json({ status: 500, Message: "No es posible devolver el limite requerido" })
-        else 
-            res.json({ status: 200, products: listProducts.slice(0, limit) });
-    }
+//Middelwares:
+app.use(express.json()); 
+app.use(express.urlencoded({extended: true}));
 
-    
-});
-
-app.get("/products/:pid", async (req, res) => {
-    const listProducts = await Product.getProducts();
-    let productId = req.params.pid;
-
-    if(productId) {
-        let product = await Product.getProductById(parseInt(productId));
-        (listProducts.Error) ? res.json({ status: 500, Message: listProducts.Error }) : res.json({ status: 200, products:  product });
-    } else
-        res.json({ status: 500, Message: "Producto no encontrado" }) 
-});
+app.use("/api/products", productsRouter);
+//app.use("/api/carts", cartsRouter);
 
 app.listen(8080, function () { console.log("Server run in port 8080"); });

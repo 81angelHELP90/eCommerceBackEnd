@@ -113,60 +113,16 @@ const validations = async (newProduct, path) => {
             let uniqueCode = await processedProductList.findIndex(product => product.code === newProduct[i].code);
 
             if (uniqueCode !== -1)
-                //return { ok: false, property: "Code Error", append: false };
                 return { ok: false, property: "Code Error" };
 
             values.forEach((value, i) => {
                 if (value === "")
-                    //return { ok: false, property: keys[i], append: false };
                     return { ok: false, property: keys[i] };
             });
         }
-
-        //return { ok: true, property: "", append: true, products: processedProductList };
         return { ok: true, property: "", products: processedProductList };
     } else
-        //return { ok: true, property: "", append: false, products: [] };
         return { ok: true, property: "", products: [] };
 }
-
-//EJEMPLO EJECUCIÓN
-/*
-const Product = new ProductManager("./products.txt");
-
-Product.addProduct([
-    {
-        title: "producto1",
-        description: "producto 1 de la tienda",
-        price: "55,90",
-        thumbnail: "https://pathProduct1_img.svg",
-        code: "767",
-        stock: "35"
-    },
-    {
-        title: "producto2",
-        description: "producto 2 de la tienda",
-        price: "75,90",
-        thumbnail: "https://pathProduct1_img.svg",
-        code: "124",
-        stock: "34"
-    },
-    {
-        title: "producto3",
-        description: "producto 3 de la tienda",
-        price: "44,90",
-        thumbnail: "https://pathProduct3_img.svg",
-        code: "267",
-        stock: "343"
-    }
-])
-*/
-//OBTENER TODOS PRODUCTOS: Product.getProducts();
-
-//OBTENER UN PRODUCTO: 5
-
-//ACTUALIZAR UN PRODUCTO: Product.updateProduct({id:  211, change: [{title: "nuevo Producto 1", price: "199,99", description: "  nuevo Descripción producto 1"}]})
-
-//BORRAR UN PRODUCTO: Product.deleteProductBy( 211);
 
 module.exports = ProductManager;
