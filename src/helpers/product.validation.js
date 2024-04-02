@@ -1,13 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 
-class ValidationsHandler{
-    #objProduct;
+class ValidationProductsHandler{
+    //#objProduct; por objData
+    #objData;
     //#path;
     #listProducts;
 
-    constructor(objProduct, filePath){
-        this.#objProduct = objProduct;
+    constructor(objData, filePath){
+        this.#objData = objData;
         this.path = path.join(__dirname, filePath);
     }
 
@@ -26,8 +27,8 @@ class ValidationsHandler{
         this.#listProducts = await this.#getExistingProducts();
 
         if(this.#listProducts.length > 0)
-            for (let i = 0; i < this.#objProduct.length; i++) {
-                let uniqueCode = await this.#listProducts.findIndex(product => product.code === this.#objProduct[i].code);
+            for (let i = 0; i < this.#objData.length; i++) {
+                let uniqueCode = await this.#listProducts.findIndex(product => product.code === this.#objData[i].code);
 
                 return uniqueCode !== -1;
             }
@@ -38,13 +39,13 @@ class ValidationsHandler{
     async #emptyPropertyValidation(){ 
         let propertyOk = true;
 
-        for (let i = 0; i < this.#objProduct.length; i++) {
-            let values = Object.values(this.#objProduct[i]);
+        for (let i = 0; i < this.#objData.length; i++) {
+            let values = Object.values(this.#objData[i]);
 
             values.forEach((value, i) => {
                 if (value === "") {
                     propertyOk = false;
-                    i = this.#objProduct.length;
+                    i = this.#objData.length;
                 }
             });
         }
@@ -63,4 +64,4 @@ class ValidationsHandler{
     }
 }
 
-module.exports = ValidationsHandler;
+module.exports = ValidationProductsHandler;

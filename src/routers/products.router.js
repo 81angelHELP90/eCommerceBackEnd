@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const productManager = require("../productManagerHelper.js");
-const Product = new productManager("./products.txt");
-const validationsHandler = require("../helpers/product.validation.js");
+const Product = new productManager("./products.json");
+const ValidationProductsHandler = require("../helpers/product.validation.js");
 const fs = require("fs");
 
 //Endpoints
@@ -24,21 +24,19 @@ router.get("/", async (req, res) => {
 
 router.get("/:pid", async (req, res) => {
     const listProducts = await Product.getProducts();
-    let productId = req.params.pid;
+    let productId = parseInt(req.params.pid);
 
-    if (productId) {
+    if (!isNaN(productId)) {
         let product = await Product.getProductById(parseInt(productId));
         (listProducts.Error) ? res.status(500).json({ error: true, Message: listProducts.Error }) : res.status(200).json({ success: true, products: product });
     } else
-        res.status(500).json({ error: true, Message: "Producto no encontrado" })
+        res.status(500).json({ error: true, Message: "Id no valido" })
 });
 
 router.post("/", async (req, res) => {
     try {
         const newProduct = req.body;
-
-        const productValidations = new validationsHandler(newProduct, "../products.txt");
-
+        const productValidations = new ValidationProductsHandler(newProduct, "../products.json");
         let product = await productValidations.newProductValidation();
 
         if (!product.error) {
@@ -58,10 +56,12 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/", async (req, res) => {
+router.put("/:pid", async (req, res) => {
     const listProducts = await Product.getProducts();
+    const updateId = req.params.pid;
     const fieldsToUpdate = req.body;
-    let id = parseInt(fieldsToUpdate[0].id);
+   
+    let id = parseInt(updateId);
 
     if (!isNaN(id)) {
         let index = await listProducts.findIndex(product => product.id === id);

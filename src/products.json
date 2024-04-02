@@ -1,0 +1,45 @@
+[
+   {
+      "title": "producto 1",
+      "description": "producto 1 de la tienda",
+      "price": "73.90",
+      "thumbnail": [
+         "https://pathProduct_1_img.svg",
+         "https://pathProduct_1B_img.svg"
+      ],
+      "code": "734",
+      "stock": "33",
+      "status": true,
+      "category": "clothes",
+      "id": 578
+   },
+   {
+      "title": "producto 2.1 actualizado",
+      "description": "producto 2 de la tienda",
+      "price": "78.78",
+      "thumbnail": [
+         "https://pathProduct_2_img.svg",
+         "https://pathProduct_2B_img.svg"
+      ],
+      "code": "234",
+      "stock": "23",
+      "status": true,
+      "category": "clothes",
+      "id": 256
+   },
+   {
+      "title": "producto 4",
+      "description": "producto 4 de la tienda",
+      "price": "73.90",
+      "thumbnail": [
+         "https://pathProduct_4_img.svg",
+         "https://pathProduct_4B_img.svg",
+         "https://pathProduct_4C_img.svg"
+      ],
+      "code": "54",
+      "stock": "3",
+      "status": true,
+      "category": "shoes",
+      "id": 491
+   }
+]
