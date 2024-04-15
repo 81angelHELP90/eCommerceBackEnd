@@ -1,7 +1,13 @@
+/*13-04-2024
 const fs = require("fs");
 const path = require("path");
+*/
 
-class ValidationProductsHandler{
+import fs from "fs";
+import path from "path";
+import __dirname from "../utils.js";
+
+export default class ValidationProductsHandler{
     //#objProduct; por objData
     #objData;
     //#path;
@@ -64,4 +70,4 @@ class ValidationProductsHandler{
     }
 }
 
-module.exports = ValidationProductsHandler;
+//module.exports = ValidationProductsHandler;

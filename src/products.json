@@ -1,45 +1,70 @@
 [
    {
-      "title": "producto 1",
-      "description": "producto 1 de la tienda",
-      "price": "73.90",
-      "thumbnail": [
-         "https://pathProduct_1_img.svg",
-         "https://pathProduct_1B_img.svg"
-      ],
-      "code": "734",
-      "stock": "33",
-      "status": true,
-      "category": "clothes",
-      "id": 578
-   },
-   {
-      "title": "producto 2.1 actualizado",
+      "title": "producto 2",
       "description": "producto 2 de la tienda",
-      "price": "78.78",
+      "price": "273.90",
       "thumbnail": [
          "https://pathProduct_2_img.svg",
          "https://pathProduct_2B_img.svg"
       ],
-      "code": "234",
-      "stock": "23",
-      "status": true,
-      "category": "clothes",
-      "id": 256
-   },
-   {
-      "title": "producto 4",
-      "description": "producto 4 de la tienda",
-      "price": "73.90",
-      "thumbnail": [
-         "https://pathProduct_4_img.svg",
-         "https://pathProduct_4B_img.svg",
-         "https://pathProduct_4C_img.svg"
-      ],
-      "code": "54",
+      "code": "522",
       "stock": "3",
       "status": true,
       "category": "shoes",
-      "id": 491
+      "id": 365
+   },
+   {
+      "title": "producto 3",
+      "description": "producto 3 de la tienda",
+      "price": "373.90",
+      "thumbnail": [
+         "https://pathProduct_3_img.svg",
+         "https://pathProduct_3B_img.svg",
+         "https://pathProduct_3C_img.svg"
+      ],
+      "code": "533",
+      "stock": "3",
+      "status": true,
+      "category": "shoes",
+      "id": 882
+   },
+   {
+      "title": "producto 6",
+      "description": "producto 6 de la tienda",
+      "price": "473.90",
+      "thumbnail": [
+         "https://pathProduct_6_img.svg"
+      ],
+      "code": "566",
+      "stock": "3",
+      "status": true,
+      "category": "shoes",
+      "id": 996
+   },
+   {
+      "title": "producto 7",
+      "description": "producto 7 de la tienda",
+      "price": "473.90",
+      "thumbnail": [
+         "https://pathProduct_7_img.svg"
+      ],
+      "code": "577",
+      "stock": "3",
+      "status": true,
+      "category": "shoes",
+      "id": 462
+   },
+   {
+      "title": "producto 8",
+      "description": "producto 8 de la tienda",
+      "price": "473.90",
+      "thumbnail": [
+         "https://pathProduct_8_img.svg"
+      ],
+      "code": "588",
+      "stock": "3",
+      "status": true,
+      "category": "shoes",
+      "id": 870
    }
 ]

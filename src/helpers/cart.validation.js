@@ -1,7 +1,13 @@
+/*13-04-2024
 const fs = require("fs");
 const path = require("path");
+*/
 
-class ValidationCartsHandler{
+import fs from "fs";
+import path from "path";
+import __dirname from "../utils.js"
+
+export default class ValidationCartsHandler{
     #listCarts = [];
 
     constructor(filePath){
@@ -20,4 +26,4 @@ class ValidationCartsHandler{
     }
 }
 
-module.exports = ValidationCartsHandler;
+//module.exports = ValidationCartsHandler;

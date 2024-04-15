@@ -1,3 +1,4 @@
+/*13-04-2024
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
@@ -5,6 +6,16 @@ const ValidationCartsHandler = require("../helpers/cart.validation.js");
 const cartValidations = new ValidationCartsHandler("../carts.json");
 const CartManager = require("../cartsManagerHelper.js");
 const Cart = new CartManager("./carts.json");
+*/
+
+import express from "express";
+import fs from "fs";
+import ValidationCartsHandler from "../helpers/cart.validation.js";
+import CartManager from "../cartsManagerHelper.js";
+
+const cartValidations = new ValidationCartsHandler("../carts.json");
+const Cart = new CartManager("./carts.json");
+export const router = express.Router();
 
 //Endpoints
 router.post("/", async (req, res) => {
@@ -67,4 +78,5 @@ router.post("/:cid/products/:pid", async (req, res) => {
 
 });
 
-module.exports = router;
+//export default router;
+//module.exports = router;
