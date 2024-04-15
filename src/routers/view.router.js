@@ -1,14 +1,8 @@
-/*
+
 const express = require("express");
 const router = express.Router();
-*/
-
-import { Router } from "express";
-
-import productManager from "../productManagerHelper.js";
+const productManager = require("../productManagerHelper.js");
 const Product = new productManager("./products.json");
-
-export const router = Router();
 
 router.get("/", async (req, res) => {
     let title = "Productos";
@@ -31,4 +25,4 @@ router.get("/realtmeproducts", async (req, res) => {
     res.status(200).render("realTimeProducts", { listProducts, title });
 });
 
-//module.exports = router;
+module.exports = router;

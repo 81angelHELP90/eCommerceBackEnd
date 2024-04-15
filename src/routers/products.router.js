@@ -1,20 +1,10 @@
-/*13-04-2024
+
 const express = require("express");
 const router = express.Router();
 const productManager = require("../productManagerHelper.js");
 const Product = new productManager("./products.json");
 const ValidationProductsHandler = require("../helpers/product.validation.js");
 const fs = require("fs");
-*/
-
-import express from "express";
-import productManager from "../productManagerHelper.js";
-import ValidationProductsHandler from "../helpers/product.validation.js";
-import fs from "fs";
-import io from "../app.js"
-
-const Product = new productManager("./products.json");
-export const router = express.Router();
 
 //Endpoints
 router.get("/", async (req, res) => {
@@ -53,14 +43,11 @@ router.post("/", async (req, res) => {
                 newProduct[i].id = Math.floor(Math.random() * (1000 - 1) + 1) //valor seudo-aleatorio entre 1 y 999
                 product.listProducts.push(newProduct[i]);
             }
-            
-            const listProducts = await Product.getProducts();
-            let list = listProducts.concat(product.listProducts);
-
-            await fs.promises.writeFile(Product.path, await JSON.stringify(list, null, 3));
+           
+            await fs.promises.writeFile(Product.path, await JSON.stringify(product.listProducts, null, 3));
 
             //SOCKET: 
-            io.emit("addProducs", product.listProducts);
+            req.io.emit("addProducs", newProduct);
 
             res.status(200).json({ success: true, message: "Producto agregado correctamente!" })
         } else {
@@ -114,7 +101,7 @@ router.delete("/:pid", async (req, res) => {
             await fs.promises.writeFile(Product.path, await JSON.stringify(filteredList, null, 3));
 
             //SOCKET: 
-            io.emit("removeProducs", filteredList);
+            req.io.emit("removeProducs", filteredList);
 
             res.status(200).json({ success: true, Message: "Producto eliminado." });
         } else 
@@ -124,5 +111,4 @@ router.delete("/:pid", async (req, res) => {
     }
 });
 
-//export default router;
-//module.exports = router;
+module.exports = router;

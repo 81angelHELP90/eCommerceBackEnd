@@ -1,4 +1,3 @@
-/*13-04-2024
 const express = require("express");
 const app = express();
 const productsRouter = require("./routers/products.router.js");
@@ -7,17 +6,9 @@ const viewRouter = require("./routers/view.router.js");
 const { engine } = require("express-handlebars");
 const { Server } = require("socket.io");
 const path = require("path");
-*/
-import express from "express";
-import { router as productsRouter } from './routers/products.router.js';
-import { router as cartsRouter } from './routers/carts.router.js';
-import { router as viewRouter }from "./routers/view.router.js";
-import { Server } from "socket.io";
-import { engine } from 'express-handlebars';
-import path from "path";
-import __dirname from "./utils.js";
 
-const app = express();
+let io
+
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -37,15 +28,16 @@ app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "/front/views")); 
 
-app.use("/api/products", productsRouter);
+app.use("/api/products", (req, res, next) => {
+    req.io = io
+    next();
+}, productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewRouter);
 
 const serverHttp = app.listen(8080, function () { console.log("Server run in port 8080"); });
 
-//Server socket import/export
-const io = new Server(serverHttp);
+io = new Server(serverHttp);
 
-export default io;
 
 

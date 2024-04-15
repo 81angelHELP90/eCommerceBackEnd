@@ -1,17 +1,20 @@
 //CLIENTE:
 const socket = io();
-let sectionCards = document.getElementById("cardsProducts");
 
 socket.on("addProducs", newProducts => {
-    handleDOMElement(newProducts);
+    let sectionCards = document.getElementById("cardsProducts");
+    
+    handleDOMElement(newProducts, sectionCards);
 });
 
 socket.on("removeProducs", newProducts => {
+    let sectionCards = document.getElementById("cardsProducts");
     sectionCards.innerHTML = "";
-    handleDOMElement(newProducts);
+
+    handleDOMElement(newProducts, sectionCards);
 });
 
-function handleDOMElement(listProducts){
+function handleDOMElement(listProducts, sectionCards){
     if (listProducts.length > 0) {
         listProducts.forEach(prod => {
             let card = document.createElement("div");
