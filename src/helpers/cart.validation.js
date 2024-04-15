@@ -1,8 +1,3 @@
-/*13-04-2024
-const fs = require("fs");
-const path = require("path");
-*/
-
 import fs from "fs";
 import path from "path";
 import __dirname from "../utils.js"
@@ -25,5 +20,3 @@ export default class ValidationCartsHandler{
             return this.#listCarts;
     }
 }
-
-//module.exports = ValidationCartsHandler;

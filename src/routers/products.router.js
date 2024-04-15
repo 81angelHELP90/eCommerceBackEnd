@@ -1,12 +1,3 @@
-/*13-04-2024
-const express = require("express");
-const router = express.Router();
-const productManager = require("../productManagerHelper.js");
-const Product = new productManager("./products.json");
-const ValidationProductsHandler = require("../helpers/product.validation.js");
-const fs = require("fs");
-*/
-
 import express from "express";
 import productManager from "../productManagerHelper.js";
 import ValidationProductsHandler from "../helpers/product.validation.js";
@@ -123,6 +114,3 @@ router.delete("/:pid", async (req, res) => {
         res.status(500).json({ error: true, Message: "El id no es valido" });
     }
 });
-
-//export default router;
-//module.exports = router;

@@ -1,16 +1,10 @@
-/*13-04-2024
-const fs = require("fs");
-const path = require("path");
-*/
 
 import fs from "fs";
 import path from "path";
 import __dirname from "../utils.js";
 
 export default class ValidationProductsHandler{
-    //#objProduct; por objData
     #objData;
-    //#path;
     #listProducts;
 
     constructor(objData, filePath){
@@ -69,5 +63,3 @@ export default class ValidationProductsHandler{
             return {error: true, message: "Codigo existente."}
     }
 }
-
-//module.exports = ValidationProductsHandler;

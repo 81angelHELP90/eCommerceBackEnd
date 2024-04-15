@@ -1,13 +1,3 @@
-/*13-04-2024
-const express = require("express");
-const app = express();
-const productsRouter = require("./routers/products.router.js");
-const cartsRouter = require("./routers/carts.router.js");
-const viewRouter = require("./routers/view.router.js");
-const { engine } = require("express-handlebars");
-const { Server } = require("socket.io");
-const path = require("path");
-*/
 import express from "express";
 import { router as productsRouter } from './routers/products.router.js';
 import { router as cartsRouter } from './routers/carts.router.js';
@@ -42,8 +32,6 @@ app.use("/api/carts", cartsRouter);
 app.use("/", viewRouter);
 
 const serverHttp = app.listen(8080, function () { console.log("Server run in port 8080"); });
-
-//Server socket import/export
 const io = new Server(serverHttp);
 
 export default io;
