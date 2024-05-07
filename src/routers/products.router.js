@@ -6,6 +6,9 @@ const Product = new productManager("./products.json");
 const ValidationProductsHandler = require("../helpers/product.validation.js");
 const fs = require("fs");
 
+const productsSchema = require("../dao/models/ProductsModels.js");
+const ValidationProductsDBHandler = require("../helpers/productDB.validation.js");
+
 //Endpoints
 router.get("/", async (req, res) => {
     const listProducts = await Product.getProducts();
@@ -32,6 +35,35 @@ router.get("/:pid", async (req, res) => {
         res.status(500).json({ error: true, Message: "Id no valido" })
 });
 
+//Add products BBDD
+router.post("/", async (req, res) => {
+    try {
+        const newProduct = req.body;
+        const productValidations = new ValidationProductsDBHandler(newProduct);
+        let product = await productValidations.newProductValidation();
+
+        if (!product.error) {
+            for (let i = 0; i < newProduct.length; i++) {
+                newProduct[i].id = Math.floor(Math.random() * (1000 - 1) + 1) //valor seudo-aleatorio entre 1 y 999
+                console.log("ID Neuvo prod.: ", newProduct[i].id)
+                product.listProducts.push(newProduct[i]);
+            }   
+            
+            //const rta = await productsSchema.create(product.listProducts);
+            const rta = await productsSchema.insertMany(product.listProducts);
+
+            res.status(200).json({ success: true, message: rta })
+        } else {
+            res.status(400).json({ error: true, message: product.message });
+        }
+    } catch (error) {
+        console.log(`Error al agregar producto: ${error}`);
+        res.status(400).json({ error: true, message: "Error al agregar producto." });
+    }
+});
+
+//Add products FileSistem
+/*
 router.post("/", async (req, res) => {
     try {
         const newProduct = req.body;
@@ -58,7 +90,7 @@ router.post("/", async (req, res) => {
         res.status(400).json({ error: true, message: "Error al agregar producto." });
     }
 });
-
+*/
 router.put("/:pid", async (req, res) => {
     const listProducts = await Product.getProducts();
     const updateId = req.params.pid;

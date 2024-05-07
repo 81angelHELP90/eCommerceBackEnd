@@ -7,6 +7,8 @@ const { engine } = require("express-handlebars");
 const { Server } = require("socket.io");
 const path = require("path");
 
+const mongooseConnect = require("mongoose");
+
 let io
 
 
@@ -36,6 +38,24 @@ app.use("/api/carts", cartsRouter);
 app.use("/", viewRouter);
 
 const serverHttp = app.listen(8080, function () { console.log("Server run in port 8080"); });
+
+//Db connection:
+const dbConector = async () => {
+    try {
+        await mongooseConnect.connect(
+            "mongodb+srv://vangel338:4rCed0KUi3oZ3E2A@cluster0.d3wk8bc.mongodb.net/?retryWrites=true&w=majority",
+            {
+                dbName:"BBDD_ecommerces_DH"
+            }
+        )
+
+        console.log("DB Conection OK");
+    } catch (error) {
+        console.log("Conector db error: ", error);
+    }
+};
+
+dbConector();
 
 io = new Server(serverHttp);
 
