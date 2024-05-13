@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const ProductManagerdb = require("../productManagerDBHelper.js");
 const productManager = new ProductManagerdb();
+const io = require("../app.js");
 
 //Metodos BBDD
 router.post("/", async (req, res) => {
@@ -10,7 +11,12 @@ router.post("/", async (req, res) => {
         const newProduct = req.body;
         let insertedProduct = await productManager.insertProducs(newProduct);
         
-        insertedProduct.status === "success" ? res.status(201).json({ status: "success", payload: insertedProduct.payload }) : res.status(401).json({ status: "error", message: insertedProduct.message });
+        if(insertedProduct.status === "success") {
+            //SOCKET: 
+            //io.emit("addProducs", product.listProducts);
+            res.status(201).json({ status: "success", payload: insertedProduct.payload });
+        } else
+            res.status(401).json({ status: "error", message: insertedProduct.message });
     } catch (error) {
         console.log(`Error al agregar producto: ${error}`);
         res.status(400).json({ status: "error", message: "Error al intentar guardar" });
@@ -36,9 +42,9 @@ router.get("/:pid", async (req, res) => {
         if (!isNaN(productId)) {
             let product = await productManager.getProductById(productId);
 
-            res.status(200).json({ success: true, payload: product });
+            res.status(200).json({ status: "success", payload: product });
         } else
-            res.status(500).json({ error: true, Message: "Id no valido" })
+            res.status(500).json({ status: "error", Message: "Id no valido" })
     } catch (error) {
         res.status(400).json({ status: "error", message: "Error al intentar guardar" });
     }
@@ -53,12 +59,12 @@ router.put("/:pid", async (req, res) => {
         if (!isNaN(productId)) {
             let product = await productManager.upDateProducts(productId, ...fieldsToUpdate);
 
-            res.status(200).json({ success: true, payload: product });
+            res.status(200).json({ status: "success", payload: product });
         } else
-            res.status(500).json({ error: true, Message: "Id no valido" })
+            res.status(500).json({ status: "error", Message: "Id no valido" })
     } catch (error) {
         console.log(`Error al actualizar producto: ${error}`);
-        res.status(501).json({ error: true, Message: "Error al actualizar" });
+        res.status(501).json({ status: "error", Message: "Error al actualizar" });
     }
 });
 
@@ -67,14 +73,16 @@ router.delete("/:pid", async (req, res) => {
         let productId = parseInt(req.params.pid);
 
         if (!isNaN(productId)) {
-            let product = await productManager.deleteProducts(productId);
+            //SOCKET: 
+            io.emit("removeProducs", product);
 
-            res.status(200).json({ success: true, payload: product });
+            let product = await productManager.deleteProducts(productId);
+            res.status(200).json({ status: "success", payload: product });
         } else
-            res.status(500).json({ error: true, Message: "El id no es valido" });
+            res.status(500).json({ status: "error", Message: "El id no es valido" });
     } catch (error) {
         console.log(`Error al eliminar producto: ${error}`);
-        res.status(501).json({ error: true, Message: "Error al eliminar producto" });
+        res.status(501).json({ status: "error", Message: "Error al eliminar producto" });
     }
 });
 
