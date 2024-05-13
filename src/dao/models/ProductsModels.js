@@ -1,17 +1,9 @@
 
 const mongoDb = require("mongoose");
-
-const productsSchema = new mongoDb.Schema(
-    {
-        title:{
-            type: String
-        },
-        description:{
-            type: String
-        },
-        price:{
-            type: String
-        },
+const productsSchema = new mongoDb.Schema({
+        title: String,
+        description:  String,
+        price:  String,
         thumbnail:{
             type: Array
         },
@@ -20,20 +12,14 @@ const productsSchema = new mongoDb.Schema(
             required: true, 
             unique: true    
         },
-        stock:{
-            type: String
-        },
-        status:{
-            type: Boolean
-        },
-        category:{
-            type: String
-        },
         id:{
             type: Number,
-            required: true,
-            unique: true,     
-        }
+            required: true, 
+            unique: true    
+        },
+        stock:  String,
+        status: String,
+        category: String
     }
 )
 

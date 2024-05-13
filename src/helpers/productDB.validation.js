@@ -1,68 +1,49 @@
 
-const productsSchema = require("../dao/models/ProductsModels.js");
+const productsModel = require("../dao/models/ProductsModels.js");
 
 class ValidationProductsDBHandler{
     //#objProduct; por objData
     #objData;
-    //#path;
-    #listProducts;
 
     constructor(objData){
         this.#objData = objData;
     }
 
-    /*
-    #fieldExistValidation(){
-        return (fs.existsSync(this.path));
-    }
-
-    async #getExistingProducts(){
-        if(this.#fieldExistValidation()) 
-            return  JSON.parse(await fs.promises.readFile(this.path, { encoding: "utf-8" }));
-        else
-            return [];
-    }
-    */
-
     async #existingCodeValidation(){ 
-        //this.#listProducts = await this.#getExistingProducts();
-        this.#listProducts = await productsSchema.find();
-
-        if(this.#listProducts.length > 0)
-            for (let i = 0; i < this.#objData.length; i++) {
-                let uniqueCode = await this.#listProducts.findIndex(product => product.code === this.#objData[i].code);
-
-                return uniqueCode !== -1;
-            }
-        else 
-            return false;
+        console.log("this.#objData.code: ", this.#objData.code);
+        const findProducts = await productsModel.find({code: this.#objData.code});
+        
+        return findProducts.length > 0;
     }
 
     async #emptyPropertyValidation(){ 
-        let propertyOk = true;
+        let completeProperties = true;
+        let values = Object.values(this.#objData);
 
-        for (let i = 0; i < this.#objData.length; i++) {
-            let values = Object.values(this.#objData[i]);
+        for (let i = 0; i < values.length; i++) {
+            if(values[i] === "thumbnail" && values[i].length === 0){
+                completeProperties = false;
+                break;
+            }
 
-            values.forEach((value, i) => {
-                if (value === "") {
-                    propertyOk = false;
-                    i = this.#objData.length;
-                }
-            });
+            if(values[i] !== "thumbnail" && values[i] === ""){
+                completeProperties = false;
+                break;
+            }
         }
 
-        return propertyOk;
+        return completeProperties;
     }
 
     async newProductValidation(){
-        if(await this.#existingCodeValidation() === false)
-            if(await this.#emptyPropertyValidation())
-                return {error: false, listProducts: this.#listProducts}
-            else
-                return {error: true, message: "Todos los campos son obligatorios."}
-        else
-            return {error: true, message: "Codigo existente."}
+        let validateCode = await this.#existingCodeValidation();
+
+        if(!validateCode){
+            let completeProperties = await this.#emptyPropertyValidation();
+
+            return completeProperties ? {status: "success", message: "Validaciones ok."} : {status: "Error", message: "Todos los campos son obligatorios."}
+        } else
+            return {status: "Error", message: "Codigo existente."}
     }
 }
 
