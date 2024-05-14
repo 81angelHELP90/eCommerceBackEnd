@@ -16,7 +16,9 @@ class ProductManagerdb {
 
     getProducts = async (limit) => {
         try {
-            const listProducts = await productsModel.find().limit(parseInt(limit)).lean();
+            //const listProducts = await productsModel.find().limit(parseInt(limit)).lean();
+            const listProducts = await productsModel.paginate({}, {limit: limit, page: 1});
+
             return listProducts;
         } catch (error) {
             console.log(`Error al obtener los datos: ${error}`);

@@ -6,6 +6,8 @@ const productManager = new ProductManagerdb();
 const io = require("../app.js");
 
 //Metodos BBDD
+
+//Insertar producto
 router.post("/", async (req, res) => {
     try {
         const newProduct = req.body;
@@ -13,7 +15,7 @@ router.post("/", async (req, res) => {
         
         if(insertedProduct.status === "success") {
             //SOCKET: 
-            //io.emit("addProducs", product.listProducts);
+            io.emit("addProducs", insertedProduct.payload);
             res.status(201).json({ status: "success", payload: insertedProduct.payload });
         } else
             res.status(401).json({ status: "error", message: insertedProduct.message });
@@ -23,10 +25,11 @@ router.post("/", async (req, res) => {
     }
 });
 
+//Obtener todos los productos | Ejemplos: limit=5 - 
 router.get("/", async (req, res) => {
     try {
         const { limit } = req.query;
-        let _limit = isNaN(parseInt(limit)) ? 0 : parseInt(limit);
+        let _limit = isNaN(parseInt(limit)) ? 10 : parseInt(limit);
         let listProducts = await productManager.getProducts(_limit);
     
         res.status(200).json({ status: "success", payload: listProducts });
@@ -35,6 +38,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+//Obtener un producto
 router.get("/:pid", async (req, res) => {
     try {
         let productId = parseInt(req.params.pid);
@@ -50,6 +54,7 @@ router.get("/:pid", async (req, res) => {
     }
 });
 
+//Modificar un producto
 router.put("/:pid", async (req, res) => {
     try {
         const updateId = req.params.pid;
@@ -68,6 +73,7 @@ router.put("/:pid", async (req, res) => {
     }
 });
 
+//Eliminar un producto
 router.delete("/:pid", async (req, res) => {
     try {
         let productId = parseInt(req.params.pid);

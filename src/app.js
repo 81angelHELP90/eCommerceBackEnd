@@ -34,7 +34,9 @@ app.use("/api/products", (req, res, next) => {
     req.io = io
     next();
 }, productsRouter);
+
 app.use("/api/carts", cartsRouter);
+
 app.use("/", viewRouter);
 
 const serverHttp = app.listen(8080, function () { console.log("Server run in port 8080"); });

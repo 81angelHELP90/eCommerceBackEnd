@@ -1,5 +1,7 @@
 
 const mongoDb = require("mongoose");
+const mongossePaginate = require("mongoose-paginate-v2");
+
 const productsSchema = new mongoDb.Schema({
         title: String,
         description:  String,
@@ -21,7 +23,9 @@ const productsSchema = new mongoDb.Schema({
         status: String,
         category: String
     }
-)
+);
+
+productsSchema.plugin(mongossePaginate);
 
 //1°Argumoento: nombre de la coleccíon | 2°Argumento:; nombre del modelo
 module.exports = mongoDb.model("productos", productsSchema);
