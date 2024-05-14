@@ -1,9 +1,8 @@
-
-const express = require("express");
-const router = express.Router();
-const ProductManagerdb = require("../productManagerDBHelper.js");
+import express from "express";
+export const router = express.Router();
+import ProductManagerdb from "../productManagerDBHelper.js";
 const productManager = new ProductManagerdb();
-const io = require("../app.js");
+import io from "../app.js";
 
 //Metodos BBDD
 
@@ -15,7 +14,10 @@ router.post("/", async (req, res) => {
         
         if(insertedProduct.status === "success") {
             //SOCKET: 
-            io.emit("addProducs", insertedProduct.payload);
+            let allProducts = await productManager.getProducts();
+            let arrayProducts = allProducts.map(product => product._doc);
+            
+            io.emit("addProducs", arrayProducts);
             res.status(201).json({ status: "success", payload: insertedProduct.payload });
         } else
             res.status(401).json({ status: "error", message: insertedProduct.message });
@@ -28,13 +30,13 @@ router.post("/", async (req, res) => {
 //Obtener todos los productos | Ejemplos: limit=5 - 
 router.get("/", async (req, res) => {
     try {
-        const { limit } = req.query;
-        let _limit = isNaN(parseInt(limit)) ? 10 : parseInt(limit);
-        let listProducts = await productManager.getProducts(_limit);
-    
+        const { limit, page, sort } = req.query;
+        let listProducts = await productManager.getProducts(limit, page, sort);
+
         res.status(200).json({ status: "success", payload: listProducts });
     } catch (error) {
-        res.status(400).json({ status: "error", message: "Error al intentar guardar" });
+        console.log("Error al al obtener los productos: ", error);
+        res.status(400).json({ status: "error", message: "Error al al obtener los productos" });
     }
 });
 
@@ -80,9 +82,15 @@ router.delete("/:pid", async (req, res) => {
 
         if (!isNaN(productId)) {
             //SOCKET: 
-            io.emit("removeProducs", product);
+            //let _product = await productManager.getProductById(productId);
+            //io.emit("removeProducs", _product);
 
             let product = await productManager.deleteProducts(productId);
+            //SOCKET: 
+            let allProducts = await productManager.getProducts();
+            let arrayProducts = allProducts.map(product => product._doc);
+            io.emit("removeProducs", arrayProducts);
+
             res.status(200).json({ status: "success", payload: product });
         } else
             res.status(500).json({ status: "error", Message: "El id no es valido" });
@@ -91,5 +99,3 @@ router.delete("/:pid", async (req, res) => {
         res.status(501).json({ status: "error", Message: "Error al eliminar producto" });
     }
 });
-
-module.exports = router;

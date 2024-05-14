@@ -1,3 +1,4 @@
+/*
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
@@ -7,6 +8,12 @@ const CartManager = require("../cartsManagerHelper.js");
 const Cart = new CartManager("./carts.json");
 
 const CartManagerdb = require("../cartsManagerDBHelper.js");
+const cartManager = new CartManagerdb();
+*/
+
+import express from "express";
+export const router = express.Router();
+import CartManagerdb from "../cartsManagerDBHelper.js";
 const cartManager = new CartManagerdb();
 
 //Metodos BBDD
@@ -83,4 +90,4 @@ router.get("/", async (req, res) => {
     }
 });
 
-module.exports = router;
+//module.exports = router;

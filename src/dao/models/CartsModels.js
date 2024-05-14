@@ -1,6 +1,7 @@
-const mongoDb = require("mongoose");
+//const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const cartsSchema = new mongoDb.Schema({
+const cartsSchema = new mongoose.Schema({
     id:{
         type: Number,
         required: true, 
@@ -20,4 +21,4 @@ const cartsSchema = new mongoDb.Schema({
 })
  
  //1°Argumoento: nombre de la coleccíon | 2°Argumento:; nombre del modelo
- module.exports = mongoDb.model("carts", cartsSchema);
+ export default mongoose.model("carts", cartsSchema);

@@ -1,6 +1,7 @@
-const validationCartsHandlerdb = require("./helpers/cartDB.validation.js");
-const cartsModel = require("./dao/models/CartsModels.js");
-const validationCarts = new validationCartsHandlerdb();
+import validationCartsHandlerdb from "./helpers/cartDB.validation.js";
+import cartsModel from "./dao/models/CartsModels.js";
+
+//const validationCarts = new validationCartsHandlerdb();
 
 class CartManager{
     #handleDBResponse(dbResponse){
@@ -79,26 +80,6 @@ class CartManager{
             return {error: "Carrito no encontrado."};
         }
     }
-
-    /*
-    getCartById = async (id) => {
-        try {
-            let processedCartsList = JSON.parse(await fs.promises.readFile(this.path, { encoding: "utf-8" }));
-            return await processedCartsList.filter(cart => cart.id === id);;
-        } catch (error) {
-            //console.log(`Error al obtener los datos: ${error}`);
-            return {error: "Carrito no encontrado."};
-        }
-    }
-    
-    getAllCarts = async () => {
-        try {
-            return await JSON.parse(await fs.promises.readFile(this.path, { encoding: "utf-8" }));
-        } catch (error) {
-            return {error: "Error al obterner los carritos"};
-        }
-    }
-    */
 }
 
-module.exports = CartManager;
+export default CartManager;

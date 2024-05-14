@@ -1,11 +1,10 @@
+import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
-const mongoDb = require("mongoose");
-const mongossePaginate = require("mongoose-paginate-v2");
-
-const productsSchema = new mongoDb.Schema({
+const productsSchema = new mongoose.Schema({
         title: String,
         description:  String,
-        price:  String,
+        price: Number,
         thumbnail:{
             type: Array
         },
@@ -25,7 +24,7 @@ const productsSchema = new mongoDb.Schema({
     }
 );
 
-productsSchema.plugin(mongossePaginate);
+productsSchema.plugin(mongoosePaginate);
 
 //1°Argumoento: nombre de la coleccíon | 2°Argumento:; nombre del modelo
-module.exports = mongoDb.model("productos", productsSchema);
+export default mongoose.model("productos", productsSchema);

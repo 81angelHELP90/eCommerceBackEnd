@@ -1,16 +1,13 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const productsRouter = require("./routers/products.router.js");
-const cartsRouter = require("./routers/carts.router.js");
-const viewRouter = require("./routers/view.router.js");
-const { engine } = require("express-handlebars");
-const { Server } = require("socket.io");
-const path = require("path");
-
-const mongooseConnect = require("mongoose");
-
-let io
-
+import { router as productsRouter } from './routers/products.router.js';
+import { router as cartsRouter } from './routers/carts.router.js';
+import { router as viewRouter }from "./routers/view.router.js";
+import { Server } from "socket.io";
+import { engine } from 'express-handlebars';
+import path from "path";
+import __dirname from "./utils.js";
+import mongooseConnect from "mongoose";
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -59,7 +56,9 @@ const dbConector = async () => {
 
 dbConector();
 
-io = new Server(serverHttp);
+const io = new Server(serverHttp);
+
+export default io;
 
 
 

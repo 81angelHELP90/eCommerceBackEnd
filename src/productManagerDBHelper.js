@@ -1,5 +1,5 @@
-const validationProductsHandlerdb = require("./helpers/productDB.validation.js");
-const productsModel = require("./dao/models/ProductsModels.js");
+import validationProductsHandlerdb from "./helpers/productDB.validation.js";
+import productsModel from "./dao/models/ProductsModels.js";
 
 class ProductManagerdb {
 
@@ -14,10 +14,15 @@ class ProductManagerdb {
         }
     }
 
-    getProducts = async (limit) => {
+    getProducts = async (limit, page, sort) => {
         try {
-            //const listProducts = await productsModel.find().limit(parseInt(limit)).lean();
-            const listProducts = await productsModel.paginate({}, {limit: limit, page: 1});
+            let _limit = isNaN(parseInt(limit)) ? 10 : parseInt(limit);
+            let _page = isNaN(parseInt(page)) ? 1 : parseInt(page);
+            let querySort =  (sort) ? parseInt(sort.split(":")[1]) : null;
+
+            //const listProducts = await productsModel.find().limit(parseInt(_limit)).lean();
+            //const listProducts = await productsModel.paginate({}, {limit: _limit, page: _page}).sort({ id: -1 }); //querySort;
+            const listProducts = (querySort) ? await productsModel.find().limit(parseInt(_limit)).sort({ price: querySort }).lean() : await productsModel.find().limit(parseInt(_limit));
 
             return listProducts;
         } catch (error) {
@@ -28,7 +33,7 @@ class ProductManagerdb {
     
     getProductById = async (id) => {
         try {
-            const product = await productsModel.find({id: id});
+            const product = await productsModel.find({id: id}).lean();
             return product;
         } catch (error) {
             console.log(`Error al obtener los datos: ${error}`);
@@ -83,4 +88,4 @@ class ProductManagerdb {
     }
 }
 
-module.exports = ProductManagerdb;
+export default ProductManagerdb;

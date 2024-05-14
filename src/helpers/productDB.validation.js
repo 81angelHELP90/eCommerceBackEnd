@@ -1,5 +1,6 @@
 
-const productsModel = require("../dao/models/ProductsModels.js");
+//const productsModel = require("../dao/models/ProductsModels.js");
+import productsModel from "../dao/models/ProductsModels.js";
 
 class ValidationProductsDBHandler{
     //#objProduct; por objData
@@ -47,4 +48,5 @@ class ValidationProductsDBHandler{
     }
 }
 
-module.exports = ValidationProductsDBHandler;
+export default ValidationProductsDBHandler;
+//module.exports = ValidationProductsDBHandler;

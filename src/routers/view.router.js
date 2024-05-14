@@ -1,19 +1,15 @@
-
-const express = require("express");
-const router = express.Router();
-//const productManager = require("../productManagerHelper.js");
-//const Product = new productManager("./products.json");
-
-const ProductManagerdb = require("../productManagerDBHelper.js");
+import { Router } from "express";
+export const router = Router();
+import ProductManagerdb from "../productManagerDBHelper.js";
 const productManager = new ProductManagerdb();
 
 router.get("/", async (req, res) => {
     let title = "Productos";
-    //const listProducts = await Product.getProducts();
-    let listProducts = await productManager.getProducts();
+    let allProducts = await productManager.getProducts();
+    let arrayProducts = allProducts.map(product => product._doc);
 
     res.setHeader("Content-type", "text/html");
-    res.status(200).render("home", { listProducts, title });
+    res.status(200).render("home", { arrayProducts, title });
 });
 
 router.get("/test/:pid", async (req, res) => {
@@ -22,13 +18,10 @@ router.get("/test/:pid", async (req, res) => {
 });
 
 router.get("/realtmeproducts", async (req, res) => {
-    let _title = "Prod. Actualizados";
-    //const listProducts = await Product.getProducts();
-
-    let listProducts = await productManager.getProducts();
+    let title = "Prod. Actualizados";
+    let allProducts = await productManager.getProducts();
+    let arrayProducts = allProducts.map(product => product._doc);
 
     res.setHeader("Content-type", "text/html");
-    res.status(200).render("realTimeProducts", { listProducts, _title });
+    res.status(200).render("realTimeProducts", { arrayProducts, title });
 });
-
-module.exports = router;
