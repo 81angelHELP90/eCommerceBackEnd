@@ -1,0 +1,43 @@
+{{>navBar}}
+<div>
+    <header class="flex-container">
+        <div class="col-10 item">
+            <h1 class="my-2 mb-3 ms-5 text-center">{{title}}</h1>
+        </div>
+    </header>
+    <main class="flex-container">
+        <section class="col-10 flex-container">
+            <form action="/api/sessions/login" method="post">
+                <input type="email" name="email" placeholder="correo electrónico">
+                <input type="password" name="password" placeholder="contraseña">
+                <input type="text" name="web" value="web" hidden>
+                <br><br>
+                <input type="submit" value="Ingresar">
+            </form>
+            <!-- VER PORQUE ESTO CON Bootstrap NO FUNCIONA
+            <div class="card my-5 mx-1">
+                <form action="">
+                    <div class="card-body">
+                        <label for="inputPassword5" class="form-label">email</label>
+                        <input type="password" id="inputPassword5" class="form-control"
+                            aria-describedby="passwordHelpBlock">
+                        <label for="inputPassword5" class="form-label">Password</label>
+                        <input type="password" id="inputPassword5" class="form-control"
+                            aria-describedby="passwordHelpBlock">
+                        <div class="text-start mt-3">
+                            <a href="/registro" class="text-decoration-none fst-italic">Registro</a>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn-secondary me-3"><a class="nav-link" href="/">Cancelar</a></button>
+                        <button type="button" class="btn btn-primary">Ingresar</button>
+                    </div>
+                </form>
+            </div>
+            -->
+        </section>
+    </main>
+    <footer></footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</div>

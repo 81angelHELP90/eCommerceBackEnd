@@ -1,0 +1,32 @@
+{{>navBar}}
+<div>
+    <header class="flex-container">
+        <div class="col-10 item">
+            <h1 class="my-2 mb-3 text-center">Productos:</h1>
+        </div>
+    </header>
+    <main class="flex-container">
+        <section class="col-10 flex-container">
+            {{#each arrayProducts}}
+            <div class="card my-1 mx-1 ">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">{{title}}</h5>
+                    <p>Descripcion: {{description}}</p>
+                    <p>Categoria: {{category}}</p>
+                    <p>Precio: $ {{price}}</p>
+                </div>
+                <div class="card-footer text-center">
+                     <button type="button" class="btn btn btn-primary my-3">Agregar al carrito</button>
+                </div>
+            </div>
+            {{/each}}
+        </section>
+        <section class="col-12 flex-container my-5">
+            <button type="button" class="btn btn btn-info me-3 my-3"><a class="nav-link"
+                    href="/cart/{{ cart._id  }}">Ver Carrito</a></button>
+        </section>
+    </main>
+    <footer></footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</div>

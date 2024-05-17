@@ -2,9 +2,14 @@ import express from "express";
 const app = express();
 import { router as productsRouter } from './routers/products.router.js';
 import { router as cartsRouter } from './routers/carts.router.js';
+import { router as sessionsRouter } from './routers/sessions.router.js';
 import { router as viewRouter }from "./routers/view.router.js";
-import { Server } from "socket.io";
-import { engine } from 'express-handlebars';
+import passport from 'passport';
+import initPassport from './config/passport.config.js';
+import {Server} from "socket.io";
+import {engine} from 'express-handlebars';
+import cookieParser from "cookie-parser";
+import sessions from "express-session";
 import path from "path";
 import __dirname from "./utils.js";
 import mongooseConnect from "mongoose";
@@ -23,16 +28,27 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, "/front/public")));
 
+app.use(sessions({
+    secret: "Hash#Hash123", resave: true, saveUninitialized: true
+}));
+
+initPassport();
+app.use(passport.initialize());
+app.use(passport.session());  //Si usamos session como estrategia 
+
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", path.join(__dirname, "/front/views")); 
 
+app.use(cookieParser());
 app.use("/api/products", (req, res, next) => {
     req.io = io
     next();
 }, productsRouter);
 
 app.use("/api/carts", cartsRouter);
+
+app.use("/api/sessions", sessionsRouter);
 
 app.use("/", viewRouter);
 
@@ -47,7 +63,6 @@ const dbConector = async () => {
                 dbName:"BBDD_ecommerces_DH"
             }
         )
-
         console.log("DB Conection OK");
     } catch (error) {
         console.log("Conector db error: ", error);

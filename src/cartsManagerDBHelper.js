@@ -14,10 +14,9 @@ class CartManager{
 
     insertCart = async () => {
         try {
-            const newCart = { id: Math.floor(Math.random() * (1000 - 1) + 1), products: [] };
-            const cart = await cartsModel.create(newCart);
+            const cart = await cartsModel.create({productos: []});
 
-            return {"success": true, "payload": cart};
+            return {"success": true, "payload": cart.toJSON()};
         } catch (error) {
             console.log(`insertCarts: Error al crear el carrito: ${error}`);
             return {"success": false, "message": "Error al crear el carrito"}; 

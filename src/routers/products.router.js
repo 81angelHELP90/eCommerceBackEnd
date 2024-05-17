@@ -8,7 +8,7 @@ import io from "../app.js";
 
 //Insertar producto
 router.post("/", async (req, res) => {
-    try {
+    try { //requeridos descripcion - cod- precio
         const newProduct = req.body;
         let insertedProduct = await productManager.insertProducs(newProduct);
         
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
             res.status(401).json({ status: "error", message: insertedProduct.message });
     } catch (error) {
         console.log(`Error al agregar producto: ${error}`);
-        res.status(400).json({ status: "error", message: "Error al intentar guardar" });
+        res.status(500).json({ status: "error", message: "Error al intentar guardar" });
     }
 });
 
@@ -33,10 +33,10 @@ router.get("/", async (req, res) => {
         const { limit, page, sort } = req.query;
         let listProducts = await productManager.getProducts(limit, page, sort);
 
-        res.status(200).json({ status: "success", payload: listProducts });
+        res.status(201).json({ status: "success", payload: listProducts });
     } catch (error) {
         console.log("Error al al obtener los productos: ", error);
-        res.status(400).json({ status: "error", message: "Error al al obtener los productos" });
+        res.status(500).json({ status: "error", message: "Error al al obtener los productos" });
     }
 });
 
@@ -48,11 +48,11 @@ router.get("/:pid", async (req, res) => {
         if (!isNaN(productId)) {
             let product = await productManager.getProductById(productId);
 
-            res.status(200).json({ status: "success", payload: product });
+            res.status(201).json({ status: "success", payload: product });
         } else
-            res.status(500).json({ status: "error", Message: "Id no valido" })
+            res.status(401).json({ status: "error", Message: "Id no valido" })
     } catch (error) {
-        res.status(400).json({ status: "error", message: "Error al intentar guardar" });
+        res.status(500).json({ status: "error", message: "Error al intentar guardar" });
     }
 });
 
@@ -66,12 +66,12 @@ router.put("/:pid", async (req, res) => {
         if (!isNaN(productId)) {
             let product = await productManager.upDateProducts(productId, ...fieldsToUpdate);
 
-            res.status(200).json({ status: "success", payload: product });
+            res.status(201).json({ status: "success", payload: product });
         } else
-            res.status(500).json({ status: "error", Message: "Id no valido" })
+            res.status(401).json({ status: "error", Message: "Id no valido" })
     } catch (error) {
         console.log(`Error al actualizar producto: ${error}`);
-        res.status(501).json({ status: "error", Message: "Error al actualizar" });
+        res.status(500).json({ status: "error", Message: "Error al actualizar" });
     }
 });
 
@@ -93,9 +93,9 @@ router.delete("/:pid", async (req, res) => {
 
             res.status(200).json({ status: "success", payload: product });
         } else
-            res.status(500).json({ status: "error", Message: "El id no es valido" });
+            res.status(401).json({ status: "error", Message: "El id no es valido" });
     } catch (error) {
         console.log(`Error al eliminar producto: ${error}`);
-        res.status(501).json({ status: "error", Message: "Error al eliminar producto" });
+        res.status(500).json({ status: "error", Message: "Error al eliminar producto" });
     }
 });

@@ -48,7 +48,8 @@ class ProductManagerdb {
 
             if (validation.status === "success") {
                 newProduct.id = Math.floor(Math.random() * (1000 - 1) + 1);
-                const product = await productsModel.create(newProduct);
+                const product = await productsModel.create(newProduct); //product.toJSON() - toObject()
+
                 return {"status": validation.status, "payload": product};
             } else 
                 return {"status": validation.status, "message": validation.message}; 

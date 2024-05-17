@@ -1,0 +1,48 @@
+{{>navBar}}
+<div>
+    <header class="flex-container">
+        <div class="col-10 item">
+            <h1 class="my-2 mb-3 ms-5 text-center">{{title}}</h1>
+        </div>
+    </header>
+    <main class="flex-container">
+        <section class="col-10 flex-container">
+            <form action="/api/sessions/registro" method="post">
+                <input type="text" name="nombre" placeholder="nombre">
+                <input type="text" name="apellido" placeholder="apellido">
+                <input type="text" name="edad" placeholder="edad">
+                <input type="email" name="email" placeholder="correo electrónico">
+                <input type="password" name="password" placeholder="contraseña">
+                <input type="text" name="web" value="web" hidden>
+                <br><br>
+                <input type="submit" value="Registrar">
+            </form>
+            <!-- VER PORQUE ESTO CON Bootstrap NO FUNCIONA
+            <div class="card my-5 mx-1 ">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Formulario de registro Registro</h5>
+                    <form action="/api/sessions/registro" method="post"></form>
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control">
+                        <label class="form-label">Apellido</label>
+                        <input type="text" name="apellido" class="form-control">
+                        <label class="form-label">email</label>
+                        <input type="email" name="email" class="form-control">
+                        <label class="form-label">Edad</label>
+                        <input type="number" name="edad" class="form-control">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control">
+                        <div class="mt-4 text-center">
+                            <button type="button" class="btn btn-secondary me-3"><a class="nav-link" href="/">Cancelar</a></button>
+                            <input type="submit" class="btn btn-primary" value="Crear Usuario">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            -->
+        </section>
+    </main>
+    <footer></footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</div>

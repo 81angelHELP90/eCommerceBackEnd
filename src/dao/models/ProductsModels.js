@@ -18,13 +18,19 @@ const productsSchema = new mongoose.Schema({
             required: true, 
             unique: true    
         },
-        stock:  String,
+        stock: {
+            type: Number,
+            default: 0
+        },
         status: String,
         category: String
-    }
+        },
+        {
+            timestamps: true
+        }
 );
 
 productsSchema.plugin(mongoosePaginate);
 
-//1°Argumoento: nombre de la coleccíon | 2°Argumento:; nombre del modelo
+//1°Argumoento: nombre de la coleccíon | 2°Argumento: nombre del modelo
 export default mongoose.model("productos", productsSchema);

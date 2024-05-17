@@ -1,9 +1,7 @@
 
-//const productsModel = require("../dao/models/ProductsModels.js");
 import productsModel from "../dao/models/ProductsModels.js";
 
 class ValidationProductsDBHandler{
-    //#objProduct; por objData
     #objData;
 
     constructor(objData){
@@ -11,7 +9,6 @@ class ValidationProductsDBHandler{
     }
 
     async #existingCodeValidation(){ 
-        console.log("this.#objData.code: ", this.#objData.code);
         const findProducts = await productsModel.find({code: this.#objData.code});
         
         return findProducts.length > 0;
@@ -49,4 +46,3 @@ class ValidationProductsDBHandler{
 }
 
 export default ValidationProductsDBHandler;
-//module.exports = ValidationProductsDBHandler;

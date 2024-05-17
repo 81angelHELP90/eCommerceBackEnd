@@ -1,22 +1,18 @@
-//const mongoose = require("mongoose");
 import mongoose from "mongoose";
 
 const cartsSchema = new mongoose.Schema({
+    /*
     id:{
         type: Number,
         required: true, 
         unique: true    
     },
-    products: {
-        type: Array
-        /* 
-        product: {
-            type: Number
-        },
-        quantity: {
-            type: Number
-        }
-        */
+    */
+    productos: {
+        type: [{
+            product: {type: mongoose.Types.ObjectId, ref: "productos"},
+            cantidad: Number
+        }]
     },
 })
  
