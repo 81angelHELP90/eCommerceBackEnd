@@ -3,8 +3,6 @@ export const router = express.Router();
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 const userManager = new UserManagerdb();
 import { generaHash } from '../utils.js';
-//import CartManagerdb from "../cartsManagerDBHelper.js";
-//const cartManager = new CartManagerdb();
 import passport from 'passport';
 
 //Registro 
@@ -64,7 +62,6 @@ router.post("/login", async(req, res)=>{
         req.session.usuario = usuario;
     
         if(web){
-            //res.redirect("/perfil");
             res.redirect("/productos");
         } else {
             res.setHeader('Content-Type','application/json');
@@ -76,7 +73,28 @@ router.post("/login", async(req, res)=>{
         res.setHeader('Content-Type','application/json');
         res.status(401).json({error:`Credenciales invalidas`})
     }
-})
+});
+
+//Autenticación de terceros:
+router.get("/github", passport.authenticate("github", {}), async (req,res) => {});
+router.get("/callBackGitHubE666", passport.authenticate("github", {failureRedirect:"/api/sessions/error"}), async (req,res) => {
+
+    let usuario = req.user;
+    usuario = {...usuario};
+    delete usuario.password;
+    req.session.usuario = usuario;
+
+    res.redirect("/productos");
+});
+router.get("/error", (req,res) => {
+    res.setHeader('Content-Type','application/json');
+    //res.status(500).json({error:`Error inesperado!`});
+    
+    let title = "Error";
+    let error = "No existen usuarios registrados"
+    //let usuario = req.session.usuario;
+    res.status(200).render("error", { title, error });
+});
 
 router.get("/logout", (req, res)=>{
     req.session.destroy(e=>{

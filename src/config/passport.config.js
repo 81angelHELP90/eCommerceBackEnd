@@ -1,5 +1,6 @@
 import passport from "passport";
 import local from "passport-local";
+import gitHub from "passport-github2";
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 const userManager = new UserManagerdb();
 import { generaHash } from "../utils.js"
@@ -15,10 +16,8 @@ const initPassport = () => {
                 passReqToCallback: true
             },
             async (req, email, password, done) => {
-            //async (req, done) => {
                 try {
-                    //let { email } = req.body;
-                    
+
                     let { nombre, apellido, edad } = req.body;
 
                     if(!email || !password )
@@ -42,18 +41,51 @@ const initPassport = () => {
         )
     )
 
+    //Autenticación por terceros: github en login: Paso 1
+    passport.use(
+        "github", //
+        new gitHub.Strategy(
+            { 
+                clientID: "Iv23lixEN4gV5hox4Ywa",
+                clientSecret: "6f3161c92ca67d7ed4b3f6dc74df1c372f6bc0bc",
+                callbackURL: "http://localhost:8080/api/sessions/callBackGitHubE666"
+            },
+            async (tokenAcceso, tokenRefresh, profile, done) => {
+                try {
+                    let nombre = profile._json.name;
+                    let email = profile._json.email;
+                    
+                    if(!email)
+                        return done(null, false);
+
+                    let existingUser = await userManager.getUserById({email});
+                
+                    if(existingUser)
+                        return done(null, existingUser);
+
+                    let newCart = await cartManager.insertCart();
+                    let newUsuario = await userManager.createUser({nombre, email, profile, rol: "user", cart: newCart.payload._id});
+                    
+                    return done(null, newUsuario);
+                } catch (error) {
+                    return done(error);
+                }
+            }
+        )
+    )
+
+
 
     // paso 1' (1 bis) - solo si usamos SESSIONS, configuro serializar / deserializer...
     passport.serializeUser((usuario, done) => {
         return done(null, usuario._id);
-    })
+    });
 
     passport.deserializeUser( async (id, done) => {
-        //let usuario = await usuariosManager.getBy({_id:id});
         let existingUser = await userManager.getUserById({id});
 
         return done(null, existingUser)
-    })
+    });
 
 }
 

@@ -15,7 +15,10 @@ const usuariosSchema = new mongoose.Schema({
     },
     cart: {
         type: mongoose.Types.ObjectId, ref: "carts"
-    }
+    },
+},
+{
+    timestamps: true, strict: false
 })
  
  //1°Argumoento: nombre de la coleccíon | 2°Argumento: nombre del modelo

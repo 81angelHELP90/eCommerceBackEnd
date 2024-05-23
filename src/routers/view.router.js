@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 
 //Vista Login
 router.get("/login", (req, res) => {
-    let title = "Ingreso";
+    let title = "Ingreso...";
 
     res.status(200).render("login", { title });
 });
@@ -33,7 +33,7 @@ router.get("/perfil", auth, (req, res) => {
     res.status(200).render("perfil", { title, usuario });
 });
 
-//Vista Productos:
+//Vista Productos:  
 router.get("/Productos", auth, async (req, res) => {
     let title = "Productos";
     
@@ -65,3 +65,14 @@ router.get("/realtmeproducts", async (req, res) => {
     res.setHeader("Content-type", "text/html");
     res.status(200).render("realTimeProducts", { arrayProducts, title });
 });
+
+//Vista Error
+router.get("/error", auth, (req, res) => {
+    let title = "Error";
+    let error = "No existen usuarios registrados"
+    //let usuario = req.session.usuario;
+    res.status(200).render("error", { title, error });
+    //res.status(200).render("perfil", { title, usuario });
+});
+
+

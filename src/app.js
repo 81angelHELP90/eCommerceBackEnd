@@ -32,6 +32,7 @@ app.use(sessions({
     secret: "Hash#Hash123", resave: true, saveUninitialized: true
 }));
 
+//Paso: 2
 initPassport();
 app.use(passport.initialize());
 app.use(passport.session());  //Si usamos session como estrategia 
