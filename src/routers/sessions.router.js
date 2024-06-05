@@ -2,45 +2,41 @@ import express from "express";
 export const router = express.Router();
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 const userManager = new UserManagerdb();
-import { generaHash } from '../utils.js';
-import passport from 'passport';
+//import { generaHash } from "../utils.js";
+import passport from "passport";
+import { passPortCall, SECRETJWT } from "../utils.js";
+import jwt from "jsonwebtoken";
 
 //Registro 
 router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/error"}), async (req,res) => {
     res.setHeader('Content-Type','application/json');
-    res.status(201).json({ status: "success", message: "Usuario creado correctamente!" });
-    /*
-    let { nombre, apellido, edad, email, password } = req.body;
 
-    if(!apellido || !email || !password){
-        res.setHeader('Content-Type','application/json');
-        res.status(401).json({ status: "error", message: "Campos requeridos" });
-    }
 
-    try {
-        let existingUser = await userManager.getUserById({email});
-
-        if(existingUser){
-            res.setHeader('Content-Type','application/json');
-            res.status(401).json({ status: "error", message: `El correo ${email} ya esta registrado` });
-        }
-
-        password = generaHash(password);
-
-        let newCart = await cartManager.insertCart();
-        let newUsuario = await userManager.createUser({nombre, apellido, edad, email, password, rol: "user", cart: newCart.payload._id});
-        delete newUsuario.password;
-
-        res.setHeader('Content-Type','application/json');
-        res.status(201).json({ status: "success", message: newUsuario });
-    } catch (error) {
-        console.log(error);
-        res.setHeader('Content-Type','application/json');
-        res.status(401).json({ status: "error", message: "Error al intentar registro" });
-    }
-    */
+    //Ahora
+    //let token = jwt.sign(req.user, SECRETJWT, {expiresIn: "1h"});
+    //res.cookie("Access_Cookie", token, {httpOnly: true});
+    //Fin ahora
+    
+    res.redirect("/login");
 })
-//Login 
+//Login Con JWT: validar token
+router.post("/login", passPortCall("login"), async(req, res)=>{
+
+    //Ahora
+    //if(!req.cookies["Access_Cookie"]){
+    let token = jwt.sign(req.user, SECRETJWT, {expiresIn: "1h"});
+
+    //Creamos la cookies desde el back:
+    res.cookie("Access_Cookie", token, {httpOnly: true});//httpOnly: solo envia la info si se accede desde una petición http - a traves de algun verbo httmp
+    //Ahora}
+
+    res.setHeader('Content-Type','application/json');
+    res.status(201).json({ status: "success", user: req.user });
+});
+
+
+//Login Con sessions
+/*
 router.post("/login", async(req, res)=>{
     let {email, password, web} = req.body;
 
@@ -74,8 +70,9 @@ router.post("/login", async(req, res)=>{
         res.status(401).json({error:`Credenciales invalidas`})
     }
 });
+*/
 
-//Autenticación de terceros:
+//Login: Autenticación de terceros:
 router.get("/github", passport.authenticate("github", {}), async (req,res) => {});
 router.get("/callBackGitHubE666", passport.authenticate("github", {failureRedirect:"/api/sessions/error"}), async (req,res) => {
 
@@ -88,12 +85,7 @@ router.get("/callBackGitHubE666", passport.authenticate("github", {failureRedire
 });
 router.get("/error", (req,res) => {
     res.setHeader('Content-Type','application/json');
-    //res.status(500).json({error:`Error inesperado!`});
-    
-    let title = "Error";
-    let error = "No existen usuarios registrados"
-    //let usuario = req.session.usuario;
-    res.status(200).render("error", { title, error });
+    res.redirect("/error");
 });
 
 router.get("/logout", (req, res)=>{

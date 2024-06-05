@@ -68,7 +68,7 @@ router.get("/realtmeproducts", async (req, res) => {
 
 //Vista Error
 router.get("/error", (req, res) => {
-    let error = "No existen usuarios registrados"
+    let error = "Error...!"
     res.status(401).render("error", { error});
 });
 

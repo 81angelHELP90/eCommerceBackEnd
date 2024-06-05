@@ -1,13 +1,26 @@
 import passport from "passport";
 import local from "passport-local";
 import gitHub from "passport-github2";
+import jwt from "jsonwebtoken";
+import passPortJwt from "passport-jwt"
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 const userManager = new UserManagerdb();
-import { generaHash } from "../utils.js"
+import { generaHash, SECRETJWT } from "../utils.js"
 import CartManagerdb from "../cartsManagerDBHelper.js";
 const cartManager = new CartManagerdb();
 
+const buscaToken=(req)=>{
+    let token=null
+
+    if(req.cookies["Access_Cookie"]){
+        token=req.cookies["Access_Cookie"]
+    }
+
+    return token
+}
+
 const initPassport = () => {
+    //Registro
     passport.use(
         "registro",
         new local.Strategy(
@@ -41,9 +54,9 @@ const initPassport = () => {
         )
     )
 
-    //Autenticación por terceros: github en login: Paso 1
+    //Login: Autenticación por terceros: github : Paso 1
     passport.use(
-        "github", //
+        "github",
         new gitHub.Strategy(
             { 
                 clientID: "Iv23lixEN4gV5hox4Ywa",
@@ -74,9 +87,29 @@ const initPassport = () => {
         )
     )
 
-
-
-    // paso 1' (1 bis) - solo si usamos SESSIONS, configuro serializar / deserializer...
+    //Login: Autenticación por terceros JWT:
+    // paso 1
+    passport.use(
+        "login",
+        new passPortJwt.Strategy(
+            {
+                secretOrKey: SECRETJWT,
+                jwtFromRequest: new passPortJwt.ExtractJwt.fromExtractors([buscaToken])
+            },
+            async(token, done) => { 
+                try {
+                    console.log("passport.use login token: ", token);
+                    return done(null, token);
+                } catch (error) {
+                    console.log("passport.use login Error: ", error);
+                    return done(error);
+                }
+            }
+        )
+    )
+    
+    /*paso 1' (1 bis) - solo si usamos SESSIONS, configuro serializar / deserializer...*/
+    
     passport.serializeUser((usuario, done) => {
         return done(null, usuario._id);
     });
@@ -86,7 +119,6 @@ const initPassport = () => {
 
         return done(null, existingUser)
     });
-
 }
 
 export default initPassport;
