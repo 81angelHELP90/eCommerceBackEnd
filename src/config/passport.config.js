@@ -1,7 +1,6 @@
 import passport from "passport";
 import local from "passport-local";
 import gitHub from "passport-github2";
-import jwt from "jsonwebtoken";
 import passPortJwt from "passport-jwt"
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 const userManager = new UserManagerdb();
@@ -88,9 +87,8 @@ const initPassport = () => {
     )
 
     //Login: Autenticación por terceros JWT:
-    // paso 1
     passport.use(
-        "login",
+        "current", 
         new passPortJwt.Strategy(
             {
                 secretOrKey: SECRETJWT,
@@ -98,10 +96,8 @@ const initPassport = () => {
             },
             async(token, done) => { 
                 try {
-                    console.log("passport.use login token: ", token);
                     return done(null, token);
                 } catch (error) {
-                    console.log("passport.use login Error: ", error);
                     return done(error);
                 }
             }
