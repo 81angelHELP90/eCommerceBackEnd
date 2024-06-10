@@ -2,16 +2,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from "crypto";
 import passport from "passport";
+import config from "./config/config.js"
 
 const __filename = fileURLToPath(import.meta.url); 
 const __dirname = path.dirname(__filename); 
 
 export default __dirname;
 
-const SECRET = "Hash#Hash123";
-export const SECRETJWT = "JWT&SECRET#";
+//const SECRET = config.secretHas//"Hash#Hash123";
+//export const SECRETJWT = "JWT&SECRET#";
 
-export const generaHash = password => crypto.createHmac("sha256", SECRET).update(password).digest("hex");
+export const generaHash = password => crypto.createHmac("sha256", config.secretHas).update(password).digest("hex");
 
 export const passPortCall = (strategy) => {
     return function (req, res, next) {

@@ -14,12 +14,14 @@
                     <p>Descripcion: {{description}}</p>
                     <p>Categoria: {{category}}</p>
                     <p>Precio: $ {{price}}</p>
+                    <p hidden="none">IdProducto: {{id}}</p>
                 </div>
                 <div class="card-footer text-center">
-                     <button type="button" class="btn btn btn-primary my-3">Agregar al carrito</button>
+                     <button type="button" class="btn btn btn-primary my-3" onclick="addProduct(this)">Agregar al carrito</button>
                 </div>
             </div>
             {{/each}}
+            <p hidden="none" id="userCartId">{{ cart._id }}</p>
         </section>
         <section class="col-12 flex-container my-5">
             <button type="button" class="btn btn btn-info me-3 my-3"><a class="nav-link"

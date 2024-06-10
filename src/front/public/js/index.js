@@ -46,3 +46,43 @@ function handleDOMElement(listProducts, sectionCards){
         });
     }
 }
+
+function addProduct(oEvent){
+    try {
+        let product = {};
+        let detailProduct = oEvent.parentElement.parentElement.getElementsByTagName("p");
+        let cartIdElement = document.getElementById("userCartId");
+
+        product.cartId = cartIdElement.textContent;
+        product.title = oEvent.parentElement.parentElement.getElementsByTagName("h5")[0].textContent;
+        product.description = detailProduct[0].textContent.split(":")[1].trim();
+        product.category = detailProduct[1].textContent.split(":")[1].trim();
+        product.price = detailProduct[2].textContent.split("$")[1].trim();
+        product.idProd = detailProduct[3].textContent.split(":")[1].trim();
+
+        sendData(product);
+    } catch (error) {
+        console.log("Error al obtener los datos: ", error)
+    }
+}
+
+function sendData(product){
+    let url = "http://localhost:8080/api/carts/addProduct/";
+
+    fetch(url, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product)
+    })
+    .then(res => 
+        res.json() 
+    )
+    .then(response  => {
+        console.log("Respuesta del back: ", response)
+    })
+    .catch(error => 
+        console.log("Error: ", error)
+    );
+}

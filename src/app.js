@@ -13,6 +13,7 @@ import sessions from "express-session";
 import path from "path";
 import __dirname from "./utils.js";
 import mongooseConnect from "mongoose";
+import config from "./config/config.js";
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -59,9 +60,9 @@ const serverHttp = app.listen(8080, function () { console.log("Server run in por
 const dbConector = async () => {
     try {
         await mongooseConnect.connect(
-            "mongodb+srv://vangel338:4rCed0KUi3oZ3E2A@cluster0.d3wk8bc.mongodb.net/?retryWrites=true&w=majority",
+            config.mongoUrl,
             {
-                dbName:"BBDD_ecommerces_DH"
+                dbName: config.dbName
             }
         )
         console.log("DB Conection OK");

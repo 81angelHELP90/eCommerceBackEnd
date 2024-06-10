@@ -1,12 +1,8 @@
 import { Router } from "express";
 export const router = Router();
-import ProductManagerdb from "../productManagerDBHelper.js";
-import auth from "../middleware/auth.js"
-const productManager = new ProductManagerdb();
-import CartManagerdb from "../cartsManagerDBHelper.js";
-const cartManager = new CartManagerdb();
+//middleware auth para session: import auth from "../middleware/auth.js"
 import { passPortCall } from "../utils.js";
-import jwt from "jsonwebtoken";
+import { getProducts, realtimeProducts } from "../controller/productsController.js";
 
 //Vista Home:
 router.get("/", (req, res) => {
@@ -37,48 +33,25 @@ router.get("/perfil", passPortCall("current"), (req, res) => {
     res.status(200).render("perfil", { title, usuario });
 });
 
-//Vista Productos: middleware auth para session | middleware passPortCall para JWT
-router.get("/Productos", passPortCall("current"), async (req, res) => {
-    let title = "Productos";
-    
-    let allProducts = await productManager.getProducts();
-    let arrayProducts = allProducts.map(product => product._doc);
-
-    
-    let cart = {
-        //Para cuando uso session: _id: req.session.usuario.cart
-        _id: req.user.cart //Para JWT:
-        
-    }
-
-    res.setHeader('Content-type','text/html');
-    res.status(200).render("products", { arrayProducts, title,  cart});
-});
-
 //Vista Cart:  middleware auth para session | middleware passPortCall para JWT
 router.get("/cart/:id", passPortCall("current"), async (req, res) => {
     let title = "Carrito";
-    
-    //Para cuando uso session: let cartId =  req.session.usuario.cart;
-    let cartId = req.user.cart //Para JWT:
+    let cartId = req.user.cart;
 
     res.status(200).render("cart", { title, cartId });
 });
 
-//Cambios en Productos
-router.get("/realtmeproducts", async (req, res) => {
-    let title = "Prod. Actualizados";
-    let allProducts = await productManager.getProducts();
-    let arrayProducts = allProducts.map(product => product._doc);
+/*##### MODELO VISTA CONTROLADOR ##### */
+//MVC: Vista Productos: middleware auth para session | middleware passPortCall para JWT
+router.get("/Productos", passPortCall("current"), getProducts);
 
-    res.setHeader("Content-type", "text/html");
-    res.status(200).render("realTimeProducts", { arrayProducts, title });
-});
+//Cambios en Productos
+router.get("/realtimeproducts", passPortCall("current"), realtimeProducts);
 
 //Vista Error
-router.get("/error", (req, res) => {
-    let error = "Error...!"
-    res.status(401).render("error", { error});
+router.get("/error/:error", (req, res) => {
+    let error = (req.params.error) ? req.params.error : "Algo salio mal!"
+    res.status(401).render("error", { error });
 });
 
 

@@ -4,9 +4,9 @@ import gitHub from "passport-github2";
 import passPortJwt from "passport-jwt"
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 const userManager = new UserManagerdb();
-import { generaHash, SECRETJWT } from "../utils.js"
-import CartManagerdb from "../cartsManagerDBHelper.js";
-const cartManager = new CartManagerdb();
+import { generaHash } from "../utils.js"
+import { cartService } from "../services/cartsService.js";
+import config from "./config.js";
 
 const buscaToken=(req)=>{
     let token=null
@@ -42,7 +42,8 @@ const initPassport = () => {
                     
                     password = generaHash(password);
 
-                    let newCart = await cartManager.insertCart();
+                    //let newCart = await cartManager.insertCart(); 
+                    let newCart = await cartService.insertCart();
                     let newUsuario = await userManager.createUser({nombre, apellido, edad, email, password, rol: "user", cart: newCart.payload._id});
                     
                     return done(null, newUsuario);
@@ -58,8 +59,8 @@ const initPassport = () => {
         "github",
         new gitHub.Strategy(
             { 
-                clientID: "Iv23lixEN4gV5hox4Ywa",
-                clientSecret: "6f3161c92ca67d7ed4b3f6dc74df1c372f6bc0bc",
+                clientID: config.clientID,  
+                clientSecret: config.clientSecret,  
                 callbackURL: "http://localhost:8080/api/sessions/callBackGitHubE666"
             },
             async (tokenAcceso, tokenRefresh, profile, done) => {
@@ -75,7 +76,8 @@ const initPassport = () => {
                     if(existingUser)
                         return done(null, existingUser);
 
-                    let newCart = await cartManager.insertCart();
+                    //let newCart = await cartManager.insertCart();
+                    let newCart = await cartService.insertCart();
                     let newUsuario = await userManager.createUser({nombre, email, profile, rol: "user", cart: newCart.payload._id});
                     
                     return done(null, newUsuario);
@@ -91,7 +93,7 @@ const initPassport = () => {
         "current", 
         new passPortJwt.Strategy(
             {
-                secretOrKey: SECRETJWT,
+                secretOrKey: config.secretJwt, 
                 jwtFromRequest: new passPortJwt.ExtractJwt.fromExtractors([buscaToken])
             },
             async(token, done) => { 
