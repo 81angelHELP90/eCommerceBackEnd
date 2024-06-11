@@ -43,5 +43,8 @@ export const addProducInCart = async (req, res) => {
 
     let addProduct = await cartService.addProducInCart(newProduct);
 
-    res.status(201).json({ status: "success", payload: addProduct });
+    if(addProduct.Success)
+        res.status(201).json({ status: "success", Message: addProduct.Success });
+    else
+        res.status(501).json({ status: "error", Message: addProduct.Error });
 }

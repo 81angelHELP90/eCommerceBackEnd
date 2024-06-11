@@ -47,13 +47,11 @@ export class CartsDAO {
             const cart = await cartsModel.find({ "_id": product.cartId });
             let prodId = parseInt(product.idProd);
             let flagProd = false;
-            let index
-            let upDateCart
+            let _idProd
 
             for(let i=0; i < cart[0].productos.length; i++)
                 if(cart[0].productos[i].idProd === prodId) {
-                    index = i;
-                    cart[0].productos[i].cantidad += 1;
+                    _idProd = cart[0].productos[i]._id;
                     flagProd = true;
                     break;
                 }
@@ -68,13 +66,16 @@ export class CartsDAO {
                     idProd: product.idProd
                 });
 
-                upDateCart = await cartsModel.updateOne({ _id: product.cartId }, { $set: cart[0] });
+                await cartsModel.updateOne({ _id: product.cartId }, { $set: cart[0] });
             } else {
-                console.log(cart[0].productos[index].cantidad);
-                upDateCart = await cartsModel.updateOne({ _id: product.cartId }, { $set: cart[0].productos[index] });
+                await cartsModel.findByIdAndUpdate(
+                    product.cartId, 
+                    { $inc: { "productos.$[product].cantidad": 1 } },
+                    { arrayFilters: [{ "product._id": _idProd }] }
+                );
             }
-           
-            return "Producto agregado correctamente!"
+
+            return { Success: "Producto agregado correctamente!" }
         } catch (error) {
             console.log(`Error al agregar producto al carrito: ${error}`);
             return { Error: "Error al agregar producto al carrito" };

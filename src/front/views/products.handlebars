@@ -6,6 +6,7 @@
         </div>
     </header>
     <main class="flex-container">
+        {{>message}}
         <section class="col-10 flex-container">
             {{#each arrayProducts}}
             <div class="card my-1 mx-1 ">
@@ -17,7 +18,8 @@
                     <p hidden="none">IdProducto: {{id}}</p>
                 </div>
                 <div class="card-footer text-center">
-                     <button type="button" class="btn btn btn-primary my-3" onclick="addProduct(this)">Agregar al carrito</button>
+                    <button type="button" class="btn btn btn-primary my-3" onclick="addProduct(this)">Agregar al
+                        carrito</button>
                 </div>
             </div>
             {{/each}}
@@ -29,6 +31,8 @@
         </section>
     </main>
     <footer></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/index.js"></script>
 </div>

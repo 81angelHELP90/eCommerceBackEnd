@@ -37,7 +37,7 @@ router.post("/login", async(req, res)=>{
             //req.session.usuario = usuario;
 
             //Para JWT:
-            let token = jwt.sign(usuario, config.secretJwt, {expiresIn: "1h"});
+            let token = jwt.sign(usuario, config.secretJwt, {expiresIn: "2h"});
 
             //Creamos la cookies desde el back:
             res.cookie("Access_Cookie", token, {httpOnly: true});
