@@ -16,7 +16,7 @@ export class CartsDAO {
 
     getCartById = async (idCart) => {
         try {
-            const cart = await cartsModel.find({ "_id": idCart });
+            const cart = await cartsModel.find({ "_id": idCart }).lean();
 
             if (cart)
                 return { "success": true, "payload": cart };

@@ -1,11 +1,23 @@
 {{>navBar}}
-<main class="flex-container">
-    <section class="col-10 flex-container">
-        <div class="card my-5 mx-1">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4">{{ title }}</h3>
-                <p class="text-center mb-1">Id carrito: <strong>{{ cartId }}</strong></p>
-            </div>
+<div>
+    <header class="flex-container mb-4 mt-2">
+        <div class="col-10 item">
+            <h2 class="my-2 mb-3 text-center">Carrito | Total carrito: $ {{montoTotal}}</h2>
         </div>
-    </section>
-</main>
+    </header>
+    <main class="flex-container">
+        <section class="col-10 flex-container">
+            {{#each products}}
+                <div class="card my-1 mx-1">
+                    <div class="card-body">
+                        <h5 class="card-title text-center mb-4">{{title}}</h5>
+                        <p>Descripcion: {{description}}</p>
+                        <p>Categoria: {{category}}</p>
+                        <p>Precio: $ {{price}}</p>
+                        <p>Cantidad: {{cantidad}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </section>
+    </main>
+</div>

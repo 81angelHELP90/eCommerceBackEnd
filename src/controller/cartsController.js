@@ -1,4 +1,5 @@
 import { cartService } from "../services/cartsService.js";
+import { helper } from "../helpers/helpers.js";
 
 export const insertCart = async (req, res) => {
     try {
@@ -16,11 +17,12 @@ export const insertCart = async (req, res) => {
 
 export const getCartById = async (req, res) => {
     try {
-        let { cid } = req.params;
+        let cid = req.params.id;
         let Cart = await cartService.getCartById(cid);
-
-        Cart.success ? res.status(201).json({ status: "success", "payload": Cart.payload }) : res.status(501).json({ status: "Error", Message: Cart.error });
-    
+        let products = Cart.payload[0].productos;
+        let montoTotal = await helper.calTotalCart(products);
+        
+        Cart.success ? res.status(200).render("cart", { cid, products, montoTotal }) : res.status(501).json({ status: "Error", Message: Cart.error });
     } catch (error) {
         console.log(error)
         res.status(401).json({ error: true, Message: "Error al obtener el carrito." });
