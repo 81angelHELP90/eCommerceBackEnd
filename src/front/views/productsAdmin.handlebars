@@ -2,16 +2,10 @@
 <div>
     <header class="flex-container">
         <div class="col-8 item">
-            <h1 class="my-2 mb-3 text-center">Productos</h1>
-        </div>
-        <div class="col-2">
-             <button type="button" class="btn btn btn-info me-3 my-3"><a class="nav-link"
-                    href="/cart/{{ cart._id }}/purchase">Ver Carrito</a></button>
+            <h1 class="my-2 mb-3 text-center">Lista de Productos:</h1>
         </div>
     </header>
     <main class="flex-container principal">
-        {{>message}}
-        <!-- -->
         <section class="col-10 flex-container">
             {{#each products}}
             <div class="card my-1 mx-1 ">
@@ -22,13 +16,8 @@
                     <p>Precio: $ {{price}}</p>
                     <p hidden="none">IdProducto: {{id}}</p>
                 </div>
-                <div class="card-footer text-center">
-                    <button type="button" class="btn btn btn-primary my-3" onclick="addProduct(this)">Agregar al
-                        carrito</button>
-                </div>
             </div>
             {{/each}}
-            <p hidden="none" id="userCartId">{{ cart._id }}</p>
         </section>
     </main>
     <footer></footer>

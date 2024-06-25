@@ -1,8 +1,13 @@
 {{>navBar}}
+{{>message}}
 <div>
     <header class="flex-container mb-4 mt-2">
         <div class="col-10 item">
-            <h2 class="my-2 mb-3 text-center">Carrito | Total carrito: $ {{montoTotal}}</h2>
+            <h2 class="my-2 mb-3 text-center">Su carrito de compras</h2>
+        </div>
+        <div class="col-2"> 
+            <button type="button" class="btn btn btn-info me-3 my-3"><a class="nav-link"
+                    href="/cart/{{ cid  }}/purchase">Finalizar compra</a></button>
         </div>
     </header>
     <main class="flex-container">
@@ -20,4 +25,5 @@
             {{/each}}
         </section>
     </main>
+    <footer></footer>
 </div>

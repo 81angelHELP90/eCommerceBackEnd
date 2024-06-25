@@ -1,18 +1,52 @@
 //CLIENTE:
 const socket = io();
 
+/*###### --- socket ---- #######*/
+//addProducs
 socket.on("addProducs", newProducts => {
     let sectionCards = document.getElementById("cardsProducts");
     
     handleDOMElement(newProducts, sectionCards);
 });
 
+//removeProducs
 socket.on("removeProducs", newProducts => {
     let sectionCards = document.getElementById("cardsProducts");
     sectionCards.innerHTML = "";
 
     handleDOMElement(newProducts, sectionCards);
 });
+
+//Back-notificación de nuevo usuario conectado: 
+socket.on("nuevoUsuario", userName => {
+    let newUser = `${userName} se a conectado al chat`
+    toast(newUser, "#47AD48");
+});
+
+//Chat - sendMessage
+function sendMessage(oEvent){
+    let message = document.getElementById("messageInput");
+    let _messsage = message.value;
+
+    if(_messsage !== ""){
+        message.value = "";
+        //Mensaje al back: Aca.. prodria enviar tambien el nombre
+        socket.emit("mensaje", _messsage.trim(), socket.id);
+    }
+} 
+
+socket.on("nuevoMensaje", (message, user) => {
+    let divMensajes = document.getElementById("mensajes");
+    
+    divMensajes.innerHTML += `<p><strong>${user}</strong><br>${message}</p>`
+
+}); 
+
+socket.on("userDisconnect", user => {
+    let userOff = `El usuario ${user} a salido del chat`;
+    toast(userOff, "red");
+});
+/*###### --- fin socket ---- #######*/
 
 function handleDOMElement(listProducts, sectionCards){
     if (listProducts.length > 0) {
@@ -80,20 +114,76 @@ function sendData(product){
         res.json() 
     )
     .then(response  => {
-        toast(response.Message);
+        toast(response.Message, "#7bd5f5");
     })
     .catch(error => 
         console.log("Error: ", error)
     );
 }
 
-const toast = msg => {
+const toast = (msg, backgroundColor) => { 
     const $toast = document.querySelectorAll(".toast")[0];
     const $toastbody = $toast.getElementsByClassName("toast-body")[0];
-    const bootToast = new bootstrap.Toast($toast)
+    const bootToast = new bootstrap.Toast($toast);
+
+    $toast.style.backgroundColor = backgroundColor;
 
     if($toastbody) {
         $toastbody.innerText = msg;
         bootToast.show();
     }
+}
+
+function endPurchase(event) { 
+    let items = document.getElementsByClassName("card-body");
+    let productData = [];
+    let cartObj = {};
+
+    for(let i=0; i < items.length; i++){
+        let info = items[i].getElementsByTagName("p")[4].innerText.split("|");
+        
+        productData.push({
+            stockDisponible: info[0].trim(), 
+            stockRestante: info[1].trim(), 
+            idProd: info[2].trim(), 
+            cantidad: info[3].trim()
+        });
+    }
+
+    let p = document.getElementById("idCart");
+    let cid = p.innerText;
+    let url = "http://localhost:8080/cart/purchase/"
+    
+    cartObj.dataProducts = productData;
+    cartObj.cartID = cid;
+
+    fetch(url, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({cartObj})
+    })
+    .then(res => 
+        res.json()
+    )
+    .then(response => { 
+        this.openPopUpFinalCompra(response);
+    })
+    .catch(error => 
+        console.log("Error: ", error)
+    );
+}
+
+function openPopUpFinalCompra(data){
+    let divMensajes = document.getElementById("popUpFinalCompra");
+    let purchaseDatetime = new Date(data.Payload.purchase_datetime);
+    let fecha = `${purchaseDatetime.getDate()}/${purchaseDatetime.getMonth()}/${purchaseDatetime.getFullYear()}`
+   
+    divMensajes.innerHTML += `<p><strong>Fecha de la compra:</strong><br>${fecha}</p>`
+    divMensajes.innerHTML += `<p><strong>Total de la compra:</strong><br>${data.Payload.amount}</p>`
+}
+
+function redirect(){
+   location.href = location.origin + "/productos";
 }

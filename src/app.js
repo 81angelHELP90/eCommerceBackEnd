@@ -73,7 +73,7 @@ const dbConector = async () => {
 
 dbConector();
 
-const io = new Server(serverHttp);
+const io = new Server(serverHttp); //Server WebSocket
 
 export default io;
 

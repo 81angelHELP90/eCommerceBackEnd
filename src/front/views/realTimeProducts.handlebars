@@ -1,3 +1,5 @@
+{{>navBar}}
+{{>message}}
 <div>
     <header class="flex-container">
         <button type="button" class="btn btn-outline-primary mx-3" data-bs-toggle="tooltip" data-bs-placement="right" title="back">
@@ -15,7 +17,7 @@
     </header>
     <main class="flex-container">
         <section class="col-10 flex-container" id="cardsProducts">
-            {{#each arrayProducts}}
+            {{#each products}}
             <div class="card my-1 mx-1">
                 <div class="card-body">
                     <h5 class="card-title text-center mb-4">{{title}}</h5>

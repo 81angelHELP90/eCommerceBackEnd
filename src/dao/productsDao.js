@@ -1,8 +1,6 @@
 import validationProductsHandlerdb from "../helpers/productDB.validation.js";
 import productsModel from "./models/ProductsModels.js";
 
-
-//class ProductsDAO{
 export class ProductsDAO {
     constructor() {}
 
@@ -77,4 +75,3 @@ export class ProductsDAO {
     }
 }
 
-//export default ProductsDAO;

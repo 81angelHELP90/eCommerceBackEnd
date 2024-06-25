@@ -1,6 +1,6 @@
 import express from "express";
 export const router = express.Router();
-import { insertCart, getCartById, getAllCarts, addProducInCart } from "../controller/cartsController.js";
+import { finallyPurchase, insertCart, getCartById, getAllCarts, addProducInCart } from "../controller/cartsController.js";
 
 //##### MODELO VISTA CONTROLADOR ##### 
 //Insertar un carrito:

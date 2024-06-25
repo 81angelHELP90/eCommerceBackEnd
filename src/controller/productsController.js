@@ -1,21 +1,57 @@
 import { productService } from "../services/productsService.js";
 import io from "../app.js";
 
+/*
+export const adminProducts = async (req, res) => {
+    try {
+        if(req.user) {
+           
+            res.setHeader('Content-type','text/html');
+            res.status(200).render("adminProducts");
+        } else 
+            res.status(200).render("adminProducts");
+    } catch (e) {
+        console.log("Error ADMIN: ", e);
+        res.status(401).render("error", { error: "Error ADMIN"});
+    }
+}
+*/
+
 export const getProducts = async (req, res) => {
     try {
         let title = "Productos";
         const { limit, page, sort } = req.query;
         let allProducts = await productService.getProducts(limit, page, sort);
-        let arrayProducts = allProducts.map(product => product._doc);
-
+        let products = allProducts.map(product => product._doc);
+       
         //Desde el navegador:
         if(req.user) {
             let cart = { _id: req.user.cart }
 
             res.setHeader('Content-type','text/html');
-            res.status(200).render("products", { arrayProducts, title,  cart});
+            res.status(200).render("products", { products, title,  cart});
         } else 
-            res.status(201).json({ status: "success", payload: arrayProducts });
+            res.status(201).json({ status: "success", payload: products });
+    } catch (e) {
+        console.log("Error al obtener los productos: ", e);
+        let error = "Error al obtener los productos"
+        res.status(401).render("error", { error});
+    }
+}
+
+//Admin:
+export const getProductsAdmin = async (req, res) => {
+    try {
+        const { limit, page, sort } = req.query;
+        let allProducts = await productService.getProducts(limit, page, sort);
+        let products = allProducts.map(product => product._doc);
+       
+        //Desde el navegador:
+        if(req.user) {
+            res.setHeader('Content-type','text/html');
+            res.status(200).render("productsAdmin", { products});
+        } else 
+            res.status(201).json({ status: "success", payload: products });
     } catch (e) {
         console.log("Error al obtener los productos: ", e);
         let error = "Error al obtener los productos"
@@ -100,13 +136,14 @@ export const realtimeProducts = async (req, res) => {
     try {
         let title = "Prod. Actualizados";
         let allProducts = await productService.getProducts();
-        let arrayProducts = allProducts.map(product => product._doc);
+        let products = allProducts.map(product => product._doc);
 
         res.setHeader("Content-type", "text/html");
-        res.status(200).render("realTimeProducts", { arrayProducts, title });
+        res.status(200).render("realTimeProducts", { products, title });
     } catch (e) {
         console.log("Error al obtener los productos: ", e);
         let error = "Error al obtener los productos"
         res.status(401).render("error", { error});
     }
 }
+

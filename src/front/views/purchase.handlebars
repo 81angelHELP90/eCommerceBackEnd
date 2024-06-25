@@ -1,0 +1,76 @@
+{{>navBar}}
+{{>message}}
+<div>
+    <header class="flex-container mb-4 mt-2">
+        <div class="col-10 item">
+            <h2 class="my-2 mb-3 text-center">Productos del carrito:</h2>
+        </div>
+        <div class="col-2"> <!-- -->
+            <p hidden="none" id="idCart">{{ cid }}</p>
+            {{#if empty }}
+                <button id="finalirCompra" type="button" disabled="disabled" class="btn btn btn-info me-3 my-3" onclick="endPurchase(this)">
+                    <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">Finalizar compra</a>
+                </button>
+            {{else}}
+                <button id="finalirCompra" type="button" class="btn btn btn-info me-3 my-3" onclick="endPurchase(this)">
+                    <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">Finalizar compra</a>
+                </button>
+            {{/if}}
+        </div>
+    </header>
+    <main class="flex-container">
+        <section class="col-10 flex-container">
+            {{#if empty }}
+                <div class="card my-1 mx-1 ">
+                    <div class="card-body">
+                        <h5 class="card-title text-center mb-4">No hay producos en el carrito</h5>
+                        <img style="width: 250px;" src="https://img.freepik.com/vector-gratis/ilustracion-concepto-carrito-compras-supermercado_114360-22408.jpg?t=st=1719357855~exp=1719361455~hmac=9fba3e03999008f24ee319e8a9a6bde78bde85fbeb320a7f38cbbc0f62593187&w=826" alt="carrito vacio">
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn btn-primary my-3" onclick="redirect()">Seguir comprando</button>
+                    </div>
+                </div>
+            {{else}}
+                {{#each products}}
+                    <div class="card my-1 mx-1">
+                        <div class="card-body">
+                            <h5 class="card-title text-center mb-4">{{ title }}</h5>
+                            <p>Descripcion: {{description}}</p>
+                            <p>Categoria: {{ category }}</p>
+                            <p>Precio: $ {{ price }}</p>
+                            <p>Cantidad: {{ cantidad }}</p>
+                            <p hidden="none">{{ stockDisponible }} | {{ stockRestante }} | {{ idProd }} | {{ cantidad }}</p>
+                            {{#if stockDisponible }}
+                            <p hidden="none"></p>
+                            {{else}}
+                            <p style="color:red;">NO HAY STOCK PARA LA CANTIDAD REQUERIDA</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/each}}
+            {{/if}}
+            <!-- Modal: -->
+            <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+                tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel">Gracias por su compra</h5>
+                            <button type="button" onclick="redirect()" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="popUpFinalCompra">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Final Modal: -->
+        </section>
+    </main>
+    <footer></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</div>

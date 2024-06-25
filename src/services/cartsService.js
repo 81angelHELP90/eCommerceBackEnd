@@ -20,6 +20,10 @@ class CartService {
     addProducInCart = async (product) => {
         return await this.dao.addProducInCart(product);
     };
+
+    upDateCart = async (id, valueUpDate) => {
+        return await this.dao.upDateCart(id, valueUpDate);
+    };
 }
 
 export const cartService = new CartService(new cartsDao);

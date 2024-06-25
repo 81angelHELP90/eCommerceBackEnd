@@ -6,6 +6,9 @@ import { generaHash } from "../utils.js";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
+import { UsuariosDTO as userDTO } from "../dto/usuariosDTO.js";
+
+//import io from "../app.js";
 
 //Registro 
 router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/error"}), async (req,res) => {
@@ -29,25 +32,25 @@ router.post("/login", async(req, res)=>{
             res.setHeader('Content-Type','application/json');
             (web) ? res.redirect("/error/Credenciales invalidas") : res.status(400).json({error:`Credenciales invalidas`});
         } else {
-            
             usuario = {...usuario};
-            delete usuario.password;
-            
+           
             //Cuando uso Sessions:
             //req.session.usuario = usuario;
 
             //Para JWT:
             let token = jwt.sign(usuario, config.secretJwt, {expiresIn: "2h"});
+            //DTO
+            let _usuario = new userDTO(usuario);
 
             //Creamos la cookies desde el back:
             res.cookie("Access_Cookie", token, {httpOnly: true});
-            //httpOnly: solo envia la info si se accede desde una petición http - a traves de algun verbo httmp
+            //httpOnly: solo envia la info si se accede desde una petición http - a traves de algun verbo http
         
-            if(web){
-                res.redirect("/productos");
-            } else {
+            if(web)
+                (_usuario.rol === "user") ? res.redirect("/productos") : res.redirect("/productos/admin");
+            else {
                 res.setHeader('Content-Type','application/json');
-                res.status(201).json({payload:"Login correcto", usuario});
+                res.status(201).json({payload:"Login correcto", _usuario });
             }
         }
     } catch (error) {
@@ -56,7 +59,6 @@ router.post("/login", async(req, res)=>{
         res.status(401).json({error:`Credenciales invalidas`})
     }
 });
-
 
 //Login: Autenticación de terceros:
 router.get("/github", passport.authenticate("github", {}), async (req,res) => {});

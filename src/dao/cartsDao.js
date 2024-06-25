@@ -81,6 +81,18 @@ export class CartsDAO {
             return { Error: "Error al agregar producto al carrito" };
         }
     };
+
+    //ActualiZar un carrito:
+    upDateCart = async (id, valueUpDate) => {
+        try {
+            const _upDateCart = await cartsModel.updateOne({"_id": id}, {$set: valueUpDate});
+
+            return _upDateCart;
+        } catch (error) {
+            console.log(`Error al actualizar producto: ${error}`);
+            return {Error: "Error al actualizar producto"};
+        }
+    }
 }
 
 

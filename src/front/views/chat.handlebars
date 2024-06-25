@@ -1,0 +1,30 @@
+{{>navBar}}
+<div>
+    <header class="flex-container">
+        <div class="col-8 item">
+            <h1 class="my-2 mb-3 text-center">Chat</h1>
+        </div>
+    </header>
+    <main class="flex-container">
+        <!-- -->
+        {{>message}}
+        <section class="col-6">
+            <form action="" method="" class="chat">
+                <div class="textAndButton">
+                    <input type="text" class="messageInput" id="messageInput" placeholder="Mensaje...">
+                    <!---->
+                    <div class="boxImg">
+                        <img src="https://img.icons8.com/?size=100&id=2837&format=png&color=000000" onclick="sendMessage(this)" alt="iconMensaje" />
+                    </div>
+                </div>
+                <div class="my-3" id="mensajes">
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</div>
