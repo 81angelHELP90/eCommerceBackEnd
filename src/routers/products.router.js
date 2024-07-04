@@ -1,6 +1,6 @@
 import express from "express";
 export const router = express.Router();
-import { getProductsAdmin, getProducts, insertProducs, getProductById, upDateProducts, deleteProducts } from "../controller/productsController.js";
+import { getMockProducts, getProductsAdmin, getProducts, insertProducs, getProductById, upDateProducts, deleteProducts } from "../controller/productsController.js";
 
 import { passPortCall } from "../utils.js";
 import handleRol from "../middleware/roleAccessHandler.js";
@@ -9,12 +9,15 @@ import handleRol from "../middleware/roleAccessHandler.js";
 //Obtener todos los productos | Ejemplos: limit=5 -
 router.get("/", passPortCall("current"), handleRol(["user"]), getProducts);
 
+//Obtener Productos del SRV Mock:
+router.get("/mockingproducts", passPortCall("current"), handleRol(["user"]), getMockProducts);
+
 //router.get("/adminProducts", adminProducts);
 
 //Lista de productos disponibles - Admin
 router.get("/admin", passPortCall("current"), handleRol(["admin"]), getProductsAdmin);
 
-//Insertar producto
+//Insertar/Crear un producto al stock
 router.post("/", passPortCall("current"), handleRol(["admin"]), insertProducs);
 
 //Obtener un producto

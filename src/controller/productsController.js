@@ -1,5 +1,10 @@
 import { productService } from "../services/productsService.js";
 import io from "../app.js";
+import { generateProducs } from "../utils.js"
+
+import { CustomError } from "../handleErrors/customError.js";
+import { TIPOS_ERROR } from "../handleErrors/EErrors.js";
+import { getCartsError, insertNewProductError } from "../handleErrors/productsError.js";
 
 /*
 export const adminProducts = async (req, res) => {
@@ -17,13 +22,25 @@ export const adminProducts = async (req, res) => {
 }
 */
 
+//mock
+export const getMockProducts = async (req, res) => {
+    try {
+        let products = await generateProducs();
+
+        res.status(201).json({ status: "success", payload: products });
+    } catch (e) {
+        console.log("Error al obtener los productos: ", e);
+        res.status(401).json("error", "Error al obtener los productos");
+    }
+}
+
 export const getProducts = async (req, res) => {
     try {
         let title = "Productos";
         const { limit, page, sort } = req.query;
         let allProducts = await productService.getProducts(limit, page, sort);
         let products = allProducts.map(product => product._doc);
-       
+
         //Desde el navegador:
         if(req.user) {
             let cart = { _id: req.user.cart }
@@ -35,6 +52,7 @@ export const getProducts = async (req, res) => {
     } catch (e) {
         console.log("Error al obtener los productos: ", e);
         let error = "Error al obtener los productos"
+        
         res.status(401).render("error", { error});
     }
 }
@@ -62,17 +80,22 @@ export const getProductsAdmin = async (req, res) => {
 export const insertProducs = async (req, res) => {
     try { 
         const newProduct = req.body;
-        let insertedProduct = await productService.insertProducs(newProduct);
         
-        if(insertedProduct.status === "success") {
-            //SOCKET: 
-            let allProducts = await productService.getProducts();
-            let arrayProducts = allProducts.map(product => product._doc);
-            
-            io.emit("addProducs", arrayProducts);
-            res.status(201).json({ status: "success", payload: insertedProduct.payload });
-        } else
-            res.status(401).json({ status: "error", message: insertedProduct.message });
+        if(!newProduct.title || !newProduct.price) {
+            CustomError.createError("Faltan datos", {newProduct}, insertNewProductError(req.body), TIPOS_ERROR.ARGUMENTOS_INVALIDOS);
+        } else {
+            let insertedProduct = await productService.insertProducs(newProduct);
+        
+            if(insertedProduct.status === "success") {
+                //SOCKET: 
+                let allProducts = await productService.getProducts();
+                let arrayProducts = allProducts.map(product => product._doc);
+                
+                io.emit("addProducs", arrayProducts);
+                res.status(201).json({ status: "success", payload: insertedProduct.payload });
+            } else
+                res.status(401).json({ status: "error", message: insertedProduct.message });
+        }
     } catch (error) {
         console.log(`Error al agregar producto: ${error}`);
         res.status(500).json({ status: "error", message: "Error al intentar guardar" });

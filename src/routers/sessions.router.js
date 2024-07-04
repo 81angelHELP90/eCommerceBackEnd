@@ -8,6 +8,10 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import { UsuariosDTO as userDTO } from "../dto/usuariosDTO.js";
 
+import { CustomError } from "../handleErrors/customError.js";
+import { TIPOS_ERROR } from "../handleErrors/EErrors.js";
+import { checkArgumentos, checkUser } from "../handleErrors/userError.js";
+
 //import io from "../app.js";
 
 //Registro 
@@ -17,11 +21,12 @@ router.post('/registro', passport.authenticate("registro", {failureRedirect:"/ap
 });
 
 //Login 
-router.post("/login", async(req, res)=>{
+router.post("/login", async(req, res) => {
     let {email, password, web} = req.body;
 
     try {
         if(!email || !password){
+            CustomError.createError("Faltan datos", {email, password}, checkArgumentos(req.body), TIPOS_ERROR.ARGUMENTOS_INVALIDOS);
             res.setHeader('Content-Type','application/json');
             (web) ? res.redirect(`/login?error=Complete email, y password`) : res.status(401).json({error:`Complete email, y password`})
         }
@@ -29,6 +34,7 @@ router.post("/login", async(req, res)=>{
         let usuario = await userManager.getUserById({email, password: generaHash(password)});
 
         if(!usuario){ 
+            CustomError.createError("Error de autenticación", {usuario}, checkUser(req.body), TIPOS_ERROR.AUTENTICACION);
             res.setHeader('Content-Type','application/json');
             (web) ? res.redirect("/error/Credenciales invalidas") : res.status(400).json({error:`Credenciales invalidas`});
         } else {
