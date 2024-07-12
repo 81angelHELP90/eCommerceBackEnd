@@ -34,6 +34,7 @@ router.post("/login", async(req, res) => {
         let usuario = await userManager.getUserById({email, password: generaHash(password)});
 
         if(!usuario){ 
+            req.logger.error("Error de autenticación");
             CustomError.createError("Error de autenticación", {usuario}, checkUser(req.body), TIPOS_ERROR.AUTENTICACION);
             res.setHeader('Content-Type','application/json');
             (web) ? res.redirect("/error/Credenciales invalidas") : res.status(400).json({error:`Credenciales invalidas`});
@@ -60,7 +61,7 @@ router.post("/login", async(req, res) => {
             }
         }
     } catch (error) {
-        console.log("login: ", error);
+        req.logger.error("login: ", error);
         res.setHeader('Content-Type','application/json');
         res.status(401).json({error:`Credenciales invalidas`})
     }

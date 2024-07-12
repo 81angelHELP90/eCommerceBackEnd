@@ -112,5 +112,13 @@ router.get("/error/:error", (req, res) => {
     res.status(401).render("error", { error });
 });
 
+//Test-log:
+router.get("/loggerTest", (req, res) => {
+    req.logger.error("Prueba level ERROR");
+    req.logger.info("Prueba level INFO");
+
+    res.setHeader('Content-Type','application/json')
+    res.status(201).json({ status: "success", message: "Test loggers" });
+});
 
 

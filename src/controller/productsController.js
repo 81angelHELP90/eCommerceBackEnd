@@ -4,7 +4,7 @@ import { generateProducs } from "../utils.js"
 
 import { CustomError } from "../handleErrors/customError.js";
 import { TIPOS_ERROR } from "../handleErrors/EErrors.js";
-import { getCartsError, insertNewProductError } from "../handleErrors/productsError.js";
+import { insertNewProductError } from "../handleErrors/productsError.js";
 
 /*
 export const adminProducts = async (req, res) => {
@@ -82,6 +82,8 @@ export const insertProducs = async (req, res) => {
         const newProduct = req.body;
         
         if(!newProduct.title || !newProduct.price) {
+            req.logger.info("Faltan datos");
+            req.logger.error("Ahora 1");
             CustomError.createError("Faltan datos", {newProduct}, insertNewProductError(req.body), TIPOS_ERROR.ARGUMENTOS_INVALIDOS);
         } else {
             let insertedProduct = await productService.insertProducs(newProduct);
@@ -93,11 +95,13 @@ export const insertProducs = async (req, res) => {
                 
                 io.emit("addProducs", arrayProducts);
                 res.status(201).json({ status: "success", payload: insertedProduct.payload });
-            } else
+            } else {
+                req.logger.error(insertedProduct.message + "Ahora 2");
                 res.status(401).json({ status: "error", message: insertedProduct.message });
+            }
         }
     } catch (error) {
-        console.log(`Error al agregar producto: ${error}`);
+        req.logger.error(`Error al agregar producto: ${error}`);
         res.status(500).json({ status: "error", message: "Error al intentar guardar" });
     }
 }
@@ -130,7 +134,7 @@ export const upDateProducts = async (req, res) => {
         } else
             res.status(401).json({ status: "error", Message: "Id no valido" })
     } catch (error) {
-        console.log(`Error al actualizar producto: ${error}`);
+        req.logger.error(`Error al actualizar producto: ${error}`);
         res.status(500).json({ status: "error", Message: "Error al actualizar" });
     }
 }
@@ -150,7 +154,7 @@ export const deleteProducts = async (req, res) => {
         } else
             res.status(401).json({ status: "error", Message: "El id no es valido" });
     } catch (error) {
-        console.log(`Error al eliminar producto: ${error}`);
+        req.logger.error(`Error al eliminar producto: ${error}`);
         res.status(500).json({ status: "error", Message: "Error al eliminar producto" });
     }
 }
@@ -164,7 +168,8 @@ export const realtimeProducts = async (req, res) => {
         res.setHeader("Content-type", "text/html");
         res.status(200).render("realTimeProducts", { products, title });
     } catch (e) {
-        console.log("Error al obtener los productos: ", e);
+        req.logger.error("Error al obtener los productos: ", e);
+        
         let error = "Error al obtener los productos"
         res.status(401).render("error", { error});
     }

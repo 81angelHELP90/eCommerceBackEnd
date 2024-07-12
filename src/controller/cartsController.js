@@ -14,7 +14,7 @@ export const insertCart = async (req, res) => {
         else
             res.status(501).json({ status: "Error", Message: "Error al intentar guardar" });
     } catch (error) {
-        console.log(`Error al agregar producto: ${error}`);
+        req.logger.error(`Error al agregar producto: ${error}`);
         res.status(401).json({ status: "error", message: "Error al intentar guardar" });
     }
 };
@@ -54,7 +54,7 @@ export const finallyPurchase = async (req, res) => {
                             cart.success ? res.status(200).render("purchase", { cid, products, empty}) : res.status(501).json({ status: "Error", Message: Cart.error });
                     })
                     .catch(e => {
-                        console.log("map error: ", e);
+                        req.logger.error("map error: ", e);
                     });
             }
         } else {
@@ -62,7 +62,7 @@ export const finallyPurchase = async (req, res) => {
             res.status(200).render("purchase", { cid, products, empty})
         };
     } catch (error) {
-        console.log(error)
+        req.logger.error(error)
         res.status(401).json({ error: true, Message: "Error al finalizar la compra." });
     }
 };
@@ -97,16 +97,16 @@ export const setTicket = async (req, res) => {
                                         res.status(201).json({ status: "success", Payload: ticket});
                                     })
                                     .catch(e => {
-                                        console.log("ticketService error: ", e);
+                                        req.logger.error("ticketService error: ", e);
                                     });
                             })
                             .catch(e => {
-                                console.log("cartService error: ", e);
+                                req.logger.error("cartService error: ", e);
                             });
                     }
                 })
                 .catch(e => {
-                    console.log("productService error: ", e);
+                    req.logger.error("productService error: ", e);
                 });
         }
     
@@ -119,7 +119,7 @@ export const getAllCarts = async (req, res) => {
         Carts.success ? res.status(201).json({ status: "success", Carts }) : res.status(501).json({ status: "Error", Message: Carts.message});
     
     } catch (error) {
-        console.log(error)
+        req.logger.error(error)
         res.status(401).json({ error: true, Message: "Error al obtener los carritos." });
     }
 };

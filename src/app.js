@@ -14,6 +14,7 @@ import path from "path";
 import __dirname from "./utils.js";
 import mongooseConnect from "mongoose";
 import config from "./config/config.js";
+import { logger, middleLogger } from "./helpers/logger.js";
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 //Middelwares:
 app.use(express.json()); 
+app.use(middleLogger);
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, "/front/public")));
 
@@ -54,7 +56,8 @@ app.use("/api/sessions", sessionsRouter);
 
 app.use("/", viewRouter);
 
-const serverHttp = app.listen(8080, function () { console.log("Server run in port 8080"); });
+//Aca se muestra el nivel info del logger porque configure a partir del nivel http:
+const serverHttp = app.listen(8080, function () { logger.info("Server run in port 8080 | " + "Environment: " + config.environment)} );
 
 //Db connection:
 const dbConector = async () => {
@@ -65,9 +68,9 @@ const dbConector = async () => {
                 dbName: config.dbName
             }
         )
-        console.log("DB Conection OK");
+        logger.info("DB Conection OK");
     } catch (error) {
-        console.log("Conector db error: ", error);
+        logger.error("Conector db error: ", error);
     }
 };
 

@@ -1,5 +1,6 @@
 const handleRol = (roles) => {
     let _roles = roles;
+    
     return (req, res, next) => {
         let roles = _roles.map(rol => rol.toUpperCase());
 
