@@ -257,8 +257,15 @@ function sendNewPass(newPass, email) {
                 location.href = location.origin + "/login";
             }, 1000);
             
-        } else 
+        } else {
+            let pass1 = document.getElementById("pass1");
+            let pass2 = document.getElementById("pass2");
+
+            pass1.value = "";
+            pass2.value = "";
+
             toast(response.error, "red");
+        }
     })
     .catch(error => {
         console.log("Error: ", error);

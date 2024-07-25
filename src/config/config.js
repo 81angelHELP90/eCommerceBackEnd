@@ -23,5 +23,7 @@ export default {
     clientSecret: process.env.CLIENT_SECRET_GITHUB,
     secretJwt: process.env.SECRETJWT,
     secretHas: process.env.SECRET,
+    ecommerceMail: process.env.ECOMMERCEMAIL,
+    ecommerceAppPass: process.env.ECOMMERCEAPPPASSWORD,
     environment: process.env.ENVIRONMENT,
 }

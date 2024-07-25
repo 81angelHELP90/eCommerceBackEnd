@@ -70,8 +70,8 @@ export const sendMail = async (email) => {
         port: 587,
         secure: false,
         auth: {
-            user: 'vangel338@gmail.com',
-            pass: 'aapfrbdbdsltjsso',
+            user: config.ecommerceMail, //'vangel338@gmail.com',
+            pass: config.ecommerceAppPass,//'aapfrbdbdsltjsso',
         },
         tls: { rejectUnauthorized: false }
     });
