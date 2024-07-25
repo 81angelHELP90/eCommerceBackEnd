@@ -10,6 +10,10 @@ class UserManagerdb {
     getUserById = async (filtro={}) => {
         return await userModel.findOne(filtro).lean();
     }
+
+    upDatePassword = async (email, valueUpDate) => {
+        return await userModel.updateOne({email: email}, {$set: valueUpDate});     
+    }
 }
 
 export default UserManagerdb;

@@ -100,6 +100,7 @@ const initPassport = () => {
                 try {
                     return done(null, token);
                 } catch (error) {
+                    console.log("Autenticación por terceros JWT: ", error)
                     return done(error);
                 }
             }

@@ -5,6 +5,10 @@ const productsSchema = new mongoose.Schema({
         title: String,
         description:  String,
         price: Number,
+        owner: {
+            type: String,
+            unique: true    
+        },
         thumbnail:{
             type: Array
         },

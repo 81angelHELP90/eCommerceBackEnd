@@ -44,8 +44,9 @@ router.post("/login", async(req, res) => {
             //Cuando uso Sessions:
             //req.session.usuario = usuario;
 
-            //Para JWT:
+            //Para JWT: --aca habra que ver si el token expiro y si es asi volver a generarlo?
             let token = jwt.sign(usuario, config.secretJwt, {expiresIn: "2h"});
+
             //DTO
             let _usuario = new userDTO(usuario);
 
@@ -95,7 +96,7 @@ router.get("/logout", (req, res)=>{
             
         }
     })
-    
+    res.clearCookie("Access_Cookie");
     res.setHeader('Content-Type','application/json');
     res.redirect("/");
 });

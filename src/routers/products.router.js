@@ -3,7 +3,7 @@ export const router = express.Router();
 import { getMockProducts, getProductsAdmin, getProducts, insertProducs, getProductById, upDateProducts, deleteProducts } from "../controller/productsController.js";
 
 import { passPortCall } from "../utils.js";
-import handleRol from "../middleware/roleAccessHandler.js";
+import { handleRol, handleCrudProdByRol } from "../middleware/roleAccessHandler.js";
 
 //##### MODELO VISTA CONTROLADOR ##### 
 //Obtener todos los productos | Ejemplos: limit=5 -
@@ -15,16 +15,16 @@ router.get("/mockingproducts", passPortCall("current"), handleRol(["user"]), get
 //router.get("/adminProducts", adminProducts);
 
 //Lista de productos disponibles - Admin
-router.get("/admin", passPortCall("current"), handleRol(["admin"]), getProductsAdmin);
+router.get("/admin", passPortCall("current"), handleRol(["admin", "premium"]), getProductsAdmin);
 
 //Insertar/Crear un producto al stock
-router.post("/", passPortCall("current"), handleRol(["admin"]), insertProducs);
+router.post("/", passPortCall("current"), handleRol(["admin", "premium"]), insertProducs);
 
 //Obtener un producto
-router.get("/:pid", passPortCall("current"), handleRol(["admin"]), getProductById);
+router.get("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), getProductById);
 
 //Modificar un producto
-router.put("/:pid", passPortCall("current"), handleRol(["admin"]), upDateProducts);
+router.put("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), upDateProducts);
 
 //Eliminar un producto
-router.delete("/:pid", passPortCall("current"), handleRol(["admin"]), deleteProducts);
+router.delete("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), deleteProducts); 

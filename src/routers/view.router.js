@@ -4,8 +4,9 @@ export const router = Router();
 import { passPortCall, userConnectWebSocket, messageWebSocket } from "../utils.js";
 import { getProductsAdmin, getProducts, realtimeProducts } from "../controller/productsController.js";
 import { getCartById, finallyPurchase, setTicket } from "../controller/cartsController.js";
+import { recoveryPass, _setNewUserPass, _changeUserPass } from "../controller/userController.js";
 import { UsuariosDTO as userDTO } from "../dto/usuariosDTO.js";
-import handleRol from "../middleware/roleAccessHandler.js";
+import { handleRol } from "../middleware/roleAccessHandler.js";
 
 import io from "../app.js";
 
@@ -13,14 +14,16 @@ import io from "../app.js";
 router.get("/", (req, res) => {
     let title = "Home";
    
-    res.status(200).render("home", { title });
+    res.status(201).render("home", { title });
 });
 
 //Login
 router.get("/login", (req, res) => {
-    let title = "Ingreso...";
+    let title = "Ingreso";
+    let changePass = false;
+    let jwtExpired = false;
 
-    res.status(200).render("login", { title });
+    res.status(201).render("login", { title, changePass, jwtExpired });
 });
 //Registro
 router.get("/registro", (req, res) => {
@@ -56,7 +59,7 @@ router.get("/productos", passPortCall("current"), handleRol(["user"]), getProduc
 //router.get("/AdminProductos", passPortCall("current"), handleRol(["admin"]), getProducts);
 
 //Lista de productos disponibles - Admin
-router.get("/productos/admin", passPortCall("current"), handleRol(["admin"]), getProductsAdmin);
+router.get("/productos/admin", passPortCall("current"), handleRol(["admin", "premium"]), getProductsAdmin);
 
 //Cambios en Productos
 router.get("/realtimeproducts", passPortCall("current"), realtimeProducts);
@@ -120,5 +123,12 @@ router.get("/loggerTest", (req, res) => {
     res.setHeader('Content-Type','application/json')
     res.status(201).json({ status: "success", message: "Test loggers" });
 });
+
+//Restablecer Cuenta:  
+router.post("/recoveryPass", recoveryPass);
+
+router.get("/setNewUserPass", _setNewUserPass);
+
+router.post("/changeUserPass", _changeUserPass);
 
 
