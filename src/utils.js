@@ -63,19 +63,19 @@ export const generateProducs = async () => {
 }
 
 //Send Mails:
-export const sendMail = async (email) => {
+export const sendMail = async (email) => { 
     //objeto Transporter: realiza la conexión con el servidor de correo
     const trasporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
         secure: false,
         auth: {
-            user: config.ecommerceMail, //'vangel338@gmail.com',
-            pass: config.ecommerceAppPass,//'aapfrbdbdsltjsso',
+            user: config.ecommerceMail,
+            pass: config.ecommerceAppPass,
         },
         tls: { rejectUnauthorized: false }
     });
-//upDatePass
+    //upDatePass
     trasporter.sendMail({
         from: "Ecommers web..",
         to: email,

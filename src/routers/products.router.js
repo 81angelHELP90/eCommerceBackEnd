@@ -27,4 +27,5 @@ router.get("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), ge
 router.put("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), upDateProducts);
 
 //Eliminar un producto
-router.delete("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), deleteProducts); 
+//ORIGINAL router.delete("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), deleteProducts); 
+router.delete("/:id", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), deleteProducts); 

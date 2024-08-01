@@ -47,11 +47,20 @@ export const finallyPurchase = async (req, res) => {
 
                 productService.getProductById(productId)
                     .then(data => {
-                        products[i].stockDisponible = parseInt(data[0].stock) - products[i].cantidad >= 0;
-                        products[i].stockRestante = parseInt(data[0].stock) - products[i].cantidad;
-                        let empty = false;
-                        if((products.length - 1) === i)
-                            cart.success ? res.status(200).render("purchase", { cid, products, empty}) : res.status(501).json({ status: "Error", Message: Cart.error });
+                        if(data.length > 0) {
+                            products[i].stockDisponible = parseInt(data[0].stock) - products[i].cantidad >= 0;
+                            products[i].stockRestante = parseInt(data[0].stock) - products[i].cantidad;
+                            let empty = false;
+
+                            if((products.length - 1) === i) {
+                                if(cart.success)
+                                    req.headers.referer && !req.headers.referer.includes("apiDocs") ? res.status(201).render("purchase", { cid, products, empty}) : res.status(201).json({ status: "success", payload: products });
+                                else {
+                                    let error = Cart.error;
+                                    req.headers.referer && !req.headers.referer.includes("apiDocs") ? res.status(401).render("error", { error }) : res.status(501).json({ status: "Error", Message: error });
+                                }
+                            }
+                        } 
                     })
                     .catch(e => {
                         req.logger.error("map error: ", e);
@@ -59,7 +68,7 @@ export const finallyPurchase = async (req, res) => {
             }
         } else {
             let empty = true;
-            res.status(200).render("purchase", { cid, products, empty})
+            req.headers.referer && !req.headers.referer.includes("apiDocs") ? res.status(201).render("purchase", { cid, products, empty}) : res.status(201).json({ status: "Error", Message: "No hay producos en el carrito" });
         };
     } catch (error) {
         req.logger.error(error)

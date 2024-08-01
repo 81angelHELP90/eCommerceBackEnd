@@ -1,0 +1,122 @@
+paths:
+  /cart/{id}/purchase:
+###-GET
+    get:
+      ###-COOKIE POR OPERACIÓN:
+      #security:
+        #- cookieAuth: [Access_Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njc1YjgzMDg0OGRjMDMzOTA1MWQzNDkiLCJub21icmUiOiJBbmdlbCAiLCJhcGVsbGlkbyI6IlZhcmdhcyIsImVkYWQiOjY3LCJlbWFpbCI6ImFuZ2VsQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiNWE5YTFmNTllYThjNGFlMzYwNTM2MmJhYzg0MTRkZjRkYWFlOWQzNjBjMTIwNzMzNTkxMDJmNTFkMjI3YWQ1NyIsInJvbCI6InVzZXIiLCJjYXJ0IjoiNjY3NWI4MmY4NDhkYzAzMzkwNTFkMzQ3IiwiY3JlYXRlZEF0IjoiMjAyNC0wNi0yMVQxNzoyODoxNi4wMDZaIiwidXBkYXRlZEF0IjoiMjAyNC0wNi0yMVQxNzoyODoxNi4wMDZaIiwiX192IjowLCJpYXQiOjE3MjI0NzM2MDksImV4cCI6MTcyMjQ4MDgwOX0.ohQSCF84MvlyjpMGmtksCHxj-xy89k_6Q4dt8AvOlQ8]
+      summary: Retorna la lista de productos de un carrito determinado.
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador(id) del carrito del usuario.
+      description: Esto retorna la lista de productos que estan dentro del carrito.
+      responses:
+        '200':   
+          description: Lista de productos del carrito.
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+        '404':    
+          description: Error al obtener los productos del carrito.
+   
+  /api/carts/:
+    get:
+      ###-COOKIE POR OPERACIÓN:
+      #security:
+        #- cookieAuth: [Access_Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njc1YjgzMDg0OGRjMDMzOTA1MWQzNDkiLCJub21icmUiOiJBbmdlbCAiLCJhcGVsbGlkbyI6IlZhcmdhcyIsImVkYWQiOjY3LCJlbWFpbCI6ImFuZ2VsQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiNWE5YTFmNTllYThjNGFlMzYwNTM2MmJhYzg0MTRkZjRkYWFlOWQzNjBjMTIwNzMzNTkxMDJmNTFkMjI3YWQ1NyIsInJvbCI6InVzZXIiLCJjYXJ0IjoiNjY3NWI4MmY4NDhkYzAzMzkwNTFkMzQ3IiwiY3JlYXRlZEF0IjoiMjAyNC0wNi0yMVQxNzoyODoxNi4wMDZaIiwidXBkYXRlZEF0IjoiMjAyNC0wNi0yMVQxNzoyODoxNi4wMDZaIiwiX192IjowLCJpYXQiOjE3MjI0NzM2MDksImV4cCI6MTcyMjQ4MDgwOX0.ohQSCF84MvlyjpMGmtksCHxj-xy89k_6Q4dt8AvOlQ8]
+      summary: Retorna la lista de todos carritos.
+      tags:
+        - Carts
+      description: Esto retorna la lista de carritos.
+      responses:
+        '200':   
+          description: Lista total de carritos
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+        '404':    
+          description: Error al obtener la lista de carritos    
+###-COMPONENTS
+components:
+  requestBodies:
+    createCarts:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Description corta del producto  
+        price:
+          type: float
+          description: Precio del producto
+        thumbnail: 
+          type: array
+          items: 
+            type: string
+            description: Imagenes del producto  
+        code:
+          type: string
+          description: Codigo unico del producto
+        stock:
+          type: string
+          description: Cantidad disponible del producto
+        status:
+          type: boolean
+          description: Status del producto
+        category:
+          type: string
+          description: Categoria del producto
+      example:
+        title: producto 8,
+        description: producto 8 de la tienda,
+        price: 18.90,
+        thumbnail: https://pathProduct_8_img.sv],
+        code: 180,
+        stock: 56,
+        status: false,
+        category: Shoes
+    upDateProducts:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Description corta del producto  
+        price:
+          type: float
+          description: Precio del producto
+        thumbnail: 
+          type: array
+          items: 
+            type: string
+            description: Imagenes del producto  
+        stock:
+          type: string
+          description: Cantidad disponible del producto
+        status:
+          type: boolean
+          description: Status del producto
+        category:
+          type: string
+          description: Categoria del producto
+      example:
+        description: producto 8 discontinuo de la tienda,
+        price: 118.90,
+        stock: 66
+###-COOKIE GLOBAL:
+security:
+  - cookieAuth: [Access_Cookie: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE5N2EwOTFmMzFmZGMzNDBkZWZjZmQiLCJub21icmUiOiJDb2RlciIsImFwZWxsaWRvIjoiSG91c2UiLCJlZGFkIjo5OSwiZW1haWwiOiJhZG1pbkNvZGVyQGNvZGVyLmNvbSIsInBhc3N3b3JkIjoiNzU2OTM5ZmE5MzAwNTY0ZjE0OWYzYzE4NDFiNzBhNmRkY2JlM2JkZTU0MTQzMWYyODMxMjc0NWU4ZmJjMDRiNyIsInJvbCI6ImFkbWluIiwiY2FydCI6IjY2YTk3YTA5MWYzMWZkYzM0MGRlZmNmYiIsImNyZWF0ZWRBdCI6IjIwMjQtMDctMzBUMjM6NDA6NTcuNjk4WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDctMzBUMjM6NDA6NTcuNjk4WiIsIl9fdiI6MCwiaWF0IjoxNzIyNTE0MDA3LCJleHAiOjE3MjI1MjEyMDd9.21jRqIOOQD2O3XJEBLyZKmasLW8TG8MFZsPd1gtxZD4]

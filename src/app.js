@@ -15,6 +15,8 @@ import __dirname from "./utils.js";
 import mongooseConnect from "mongoose";
 import config from "./config/config.js";
 import { logger, middleLogger } from "./helpers/logger.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -24,6 +26,22 @@ app.use((req, res, next) => {
     res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
+
+//Configuración Swagger:
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Documentación ecommers backend",
+            version: "1.0.0",
+            desciption: "Documentación relacionada a los productos y carrito de compras del backend ecommers"
+        }
+    },
+    apis: ["./src/docs/*.yaml"] 
+}
+
+const spec = swaggerJSDoc(swaggerOptions);
+
 
 //Middelwares:
 app.use(express.json()); 
@@ -55,6 +73,10 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 
 app.use("/", viewRouter);
+
+app.use("/apiDocs", swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
+
+//app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(spec))
 
 //Aca se muestra el nivel info del logger porque configure a partir del nivel http:
 const serverHttp = app.listen(8080, function () { logger.info("Server run in port 8080 | " + "Environment: " + config.environment)} );

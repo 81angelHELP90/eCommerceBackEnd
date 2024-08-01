@@ -1,16 +1,18 @@
 import express from "express";
 export const router = express.Router();
-import { finallyPurchase, insertCart, getCartById, getAllCarts, addProducInCart } from "../controller/cartsController.js";
+import { insertCart, getCartById, getAllCarts, addProducInCart } from "../controller/cartsController.js";
+import { passPortCall } from "../utils.js";
+import { handleRol } from "../middleware/roleAccessHandler.js";
 
 //##### MODELO VISTA CONTROLADOR ##### 
 //Insertar un carrito:
-router.post("/", insertCart);
+router.post("/", passPortCall("current"), handleRol(["user"]), insertCart);
 
 //Obtener todos los carritos:
-router.get("/", getAllCarts);
+router.get("/", passPortCall("current"), handleRol(["user"]), getAllCarts);
 
 //Obtener un solo carrito:
-router.get("/:cid", getCartById);
+router.get("/:cid", passPortCall("current"), handleRol(["user"]), getCartById);
 
 //Agregar un nuevo producto al carrito:
-router.post("/addProduct", addProducInCart);
+router.post("/addProduct", passPortCall("current"), handleRol(["user"]), addProducInCart);

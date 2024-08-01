@@ -48,12 +48,12 @@ router.post("/login", async(req, res) => {
             let token = jwt.sign(usuario, config.secretJwt, {expiresIn: "2h"});
 
             //DTO
-            let _usuario = new userDTO(usuario);
+            let _usuario = new userDTO(usuario);    
 
             //Creamos la cookies desde el back:
             res.cookie("Access_Cookie", token, {httpOnly: true});
             //httpOnly: solo envia la info si se accede desde una petición http - a traves de algun verbo http
-        
+          
             if(web)
                 (_usuario.rol === "user") ? res.redirect("/productos") : res.redirect("/productos/admin");
             else {
@@ -95,8 +95,10 @@ router.get("/logout", (req, res)=>{
             )
             
         }
-    })
+    });
+    
     res.clearCookie("Access_Cookie");
     res.setHeader('Content-Type','application/json');
-    res.redirect("/");
+    //ORIGINAL: res.redirect("/"); 
+    res.redirect("/login");
 });

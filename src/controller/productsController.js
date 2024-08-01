@@ -27,7 +27,7 @@ export const getProducts = async (req, res) => {
         let products = allProducts.map(product => product._doc);
 
         //Desde el navegador:
-        if(req.user) {
+        if(req.user && req.headers.referer && !req.headers.referer.includes("apiDocs")) {
             let cart = { _id: req.user.cart }
 
             res.setHeader('Content-type','text/html');
@@ -50,7 +50,7 @@ export const getProductsAdmin = async (req, res) => {
         let products = allProducts.map(product => product._doc);
        
         //Desde el navegador:
-        if(req.user) {
+        if(req.user && req.headers.referer && !req.headers.referer.includes("apiDocs")) {
             res.setHeader('Content-type','text/html');
             res.status(201).render("productsAdmin", { products});
         } else 
@@ -116,10 +116,13 @@ export const upDateProducts = async (req, res) => {
     try {
         const updateId = req.params.pid;
         const fieldsToUpdate = req.body;
+        const arrayFieldsToUpdate = [];
         let productId = parseInt(updateId);
 
+        arrayFieldsToUpdate.push(fieldsToUpdate);
+
         if (!isNaN(productId)) {
-            let product = await productService.upDateProducts(productId, ...fieldsToUpdate);
+            let product = await productService.upDateProducts(productId, ...arrayFieldsToUpdate);
 
             res.status(201).json({ status: "success", payload: product });
         } else
@@ -133,18 +136,18 @@ export const upDateProducts = async (req, res) => {
 //Eliminar un producto del stock
 export const deleteProducts = async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid);
+        const productId = parseInt(req.params.id)//ORIGINAL parseInt(req.params.pid);
         
         if (!isNaN(productId)) {
 
-            let product = await productService.deleteProducts(productId);
+            let message = await productService.deleteProducts(productId);
             
             //SOCKET: 
             let allProducts = await productService.getProducts();
             let arrayProducts = allProducts.map(product => product._doc);
             io.emit("removeProducs", arrayProducts);
 
-            res.status(200).json({ status: "success", payload: product });
+            res.status(200).json({ status: "success", payload: message });
         } else
             res.status(401).json({ status: "error", Message: "El id no es valido" });
     } catch (e) {

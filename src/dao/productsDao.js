@@ -65,12 +65,12 @@ export class ProductsDAO {
             const deleteProd = await productsModel.deleteOne({id: id});
 
             if(deleteProd.deletedCount > 0)
-                return deleteProd;
+                return "Producto eliminado correctamente.";
             else
-                return "No se encotro el producto a elimiar";
+                return "No se encontro el producto a elimiar.";
         } catch (error) {
             console.log(`Error al elimiar producto: ${error}`);
-            return {Error: "Error al elimiar producto"};
+            return {Error: "Error al elimiar producto."};
         }
     }
 }
