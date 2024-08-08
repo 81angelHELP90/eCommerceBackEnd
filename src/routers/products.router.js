@@ -7,8 +7,8 @@ import { handleRol, handleCrudProdByRol } from "../middleware/roleAccessHandler.
 
 //##### MODELO VISTA CONTROLADOR ##### 
 //Obtener todos los productos | Ejemplos: limit=5 -
-router.get("/", passPortCall("current"), handleRol(["user"]), getProducts);
-
+//router.get("/", passPortCall("current"), handleRol(["user"]), getProducts);
+//5-08-24router.get("/", getProducts);
 //Obtener Productos del SRV Mock:
 router.get("/mockingproducts", passPortCall("current"), handleRol(["user"]), getMockProducts);
 
@@ -27,5 +27,4 @@ router.get("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), ge
 router.put("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), upDateProducts);
 
 //Eliminar un producto
-//ORIGINAL router.delete("/:pid", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), deleteProducts); 
 router.delete("/:id", passPortCall("current"), handleRol(["admin", "premium"]), handleCrudProdByRol(), deleteProducts); 

@@ -24,8 +24,15 @@ export const getCartById = async (req, res) => {
         let cid = req.params.id;
         let Cart = await cartService.getCartById(cid);
         let products = Cart.payload[0]?.productos;
-        
-        Cart.success ? res.status(200).render("cart", { cid, products }) : res.status(501).json({ status: "Error", Message: Cart.error });
+        let error = Cart.error;
+
+        if(req.user && req.headers.referer && !req.headers.referer.includes("apiDocs")) {
+            
+            res.setHeader('Content-type','text/html');
+            Cart.success && (req.user.cart === cid) ? res.status(201).render("cart", { cid, products }) : res.status(401).render("error", { error });
+        } else 
+            Cart.success && (req.user.cart === cid) ? res.status(201).json({ status: "success", payload: products }) : res.status(501).json({ status: "Error", Message: error });
+        //Fin Ahoar
     } catch (error) {
         console.log(error)
         res.status(401).json({ error: true, Message: "Error al obtener el carrito." });
@@ -37,7 +44,7 @@ export const finallyPurchase = async (req, res) => {
         let cid = req.params.id;
         let cart = await cartService.getCartById(cid);
         //Productos del carrito:
-        let products = cart.payload[0]?.productos; 
+        let products = cart.payload[0]?.productos;
         
         //Check Stock:
         if(products.length > 0) {
@@ -56,7 +63,7 @@ export const finallyPurchase = async (req, res) => {
                                 if(cart.success)
                                     req.headers.referer && !req.headers.referer.includes("apiDocs") ? res.status(201).render("purchase", { cid, products, empty}) : res.status(201).json({ status: "success", payload: products });
                                 else {
-                                    let error = Cart.error;
+                                    let error = Cart.error
                                     req.headers.referer && !req.headers.referer.includes("apiDocs") ? res.status(401).render("error", { error }) : res.status(501).json({ status: "Error", Message: error });
                                 }
                             }

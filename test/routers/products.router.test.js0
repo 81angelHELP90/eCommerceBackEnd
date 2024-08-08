@@ -1,0 +1,62 @@
+import config from "../../src/config/config.js";
+import UserManagerdb from "../../src/usuarioManagerDBHelper.js";
+import mongooseConnect from "mongoose";
+import { expect } from "chai";
+import { afterEach, before, describe, it } from "mocha";
+import supertest from "supertest";
+
+const requester = supertest("http://localhost:8080");
+
+const dbConector = async () => {
+    try {
+        await mongooseConnect.connect(
+            config.mongoUrl,
+            {
+                dbName: config.dbName
+            }
+        )
+        console.log("DB Conection OK");
+    } catch (error) {
+        console.log("Conector db error: ", error);
+    }
+};
+
+dbConector();
+
+//Test Products:
+describe("##### Test: Router Products #######", function () {
+    this.timeout(10000); 
+
+    before(async function () {
+        this.userManager = new UserManagerdb();
+    });
+
+    after(async function () {
+        //hago esto acá para "matar" la terminal cuando termina el entorno de test porque el flag --test me tira el error: unknown option '--exit'
+        //process.exit();
+    });
+
+
+    it("Valida que la ruta: /productos/ y/o /productos/admin, método get, retorne productos solo si el usuario tiene una sesion activa", async function () {
+        let { headers } = await requester.post("/api/sessions/login").send({ "email": "adminCoder@coder.com", "password": "adminCod3r123" });
+        //let repuesta = await requester.get("/productos/").set("Cookie", headers["set-cookie"][0]);
+        let repuesta = await requester.get("/productos/admin").set("Cookie", headers["set-cookie"][0])
+
+        expect(repuesta.status).to.equal(201);
+    });
+
+    it("Valida que la ruta: /productos/ y/o /productos/admin, método get, retorne productos solo si el usuario tiene el rol correcto", async function () {
+        let { headers } = await requester.post("/api/sessions/login").send({ "email": "adminCoder@coder.com", "password": "adminCod3r123" });
+        let repuesta = await requester.get("/productos/admin").set("Cookie", headers["set-cookie"][0])
+
+        expect(repuesta.status).to.equal(201);
+    });
+
+    //328 - 975 - 871
+    it("Valida que la ruta: /api/products/:pid, método get, retorne un producto dado un id de producto", async function () {
+        let { headers } = await requester.post("/api/sessions/login").send({ "email": "adminCoder@coder.com", "password": "adminCod3r123" });
+        let { body } = await requester.get("/api/products/871").set("Cookie", headers["set-cookie"][0])
+
+        expect(body.payload.length > 0).to.equal(true);
+    });
+})

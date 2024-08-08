@@ -11,8 +11,8 @@ router.post("/", passPortCall("current"), handleRol(["user"]), insertCart);
 //Obtener todos los carritos:
 router.get("/", passPortCall("current"), handleRol(["user"]), getAllCarts);
 
-//Obtener un solo carrito:
-router.get("/:cid", passPortCall("current"), handleRol(["user"]), getCartById);
+//Obtener un solo carrito: | :cid
+router.get("/:id", passPortCall("current"), handleRol(["user"]), getCartById);
 
 //Agregar un nuevo producto al carrito:
 router.post("/addProduct", passPortCall("current"), handleRol(["user"]), addProducInCart);

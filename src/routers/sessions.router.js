@@ -97,8 +97,7 @@ router.get("/logout", (req, res)=>{
         }
     });
     
-    res.clearCookie("Access_Cookie");
+    res.clearCookie("Access_Cookie", "", {expires: new Date(1)});
     res.setHeader('Content-Type','application/json');
-    //ORIGINAL: res.redirect("/"); 
     res.redirect("/login");
 });
