@@ -1,11 +1,14 @@
 {{>navBar}}
 <div>
     <header class="flex-container">
+        <div class="col-2">
+            <button type="button" class="btn btn btn-info ms-5 my-3" data-valor="{{ userId }}" onclick="changeRol(this)">Ser Premium</button>
+        </div>
         <div class="col-8 item">
             <h1 class="my-2 mb-3 text-center">Productos</h1>
         </div>
         <div class="col-2">
-             <button type="button" class="btn btn btn-info me-3 my-3"><a class="nav-link"
+            <button type="button" class="btn btn btn-info me-3 my-3"><a class="nav-link"
                     href="/cart/{{ cart._id }}/purchase">Ver Carrito</a></button>
         </div>
     </header>

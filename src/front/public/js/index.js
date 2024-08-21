@@ -44,7 +44,7 @@ socket.on("nuevoMensaje", (message, user) => {
 
 socket.on("userDisconnect", user => {
     let userOff = `El usuario ${user} a salido del chat`;
-    toast(userOff, "red");
+    toast(userOff, "#fc2d20");
 });
 /*###### --- fin socket ---- #######*/
 
@@ -218,7 +218,7 @@ function sendDataByRecoveryPass() {
     }
 }
 
-function getDataToChangePass() { 
+function getDataToChangePass() {
     let pass1 = document.getElementById("pass1");
     let pass2 = document.getElementById("pass2");
     let user = document.getElementById("user");
@@ -226,7 +226,7 @@ function getDataToChangePass() {
 
     if (pass1.value !== pass2.value) {
         pError.textContent = "las contraseñas ingresadas no coinciden";
-        pError.style.color = "red";
+        pError.style.color = "#fc2d20";
         pError.hidden = false;
     } else {
         pError.hidden = true;
@@ -247,29 +247,29 @@ function sendNewPass(newPass, email) {
         },
         body: JSON.stringify({ newPass: newPass, email: email })
     })
-    .then(res => res.json() )
-    .then(response => {
-        console.log(response);
-        if(response.success){
-            toast(response.success, "#7bd5f5");
+        .then(res => res.json())
+        .then(response => {
+            console.log(response);
+            if (response.success) {
+                toast(response.success, "#7bd5f5");
 
-            setTimeout(function(){
-                location.href = location.origin + "/login";
-            }, 1000);
-            
-        } else {
-            let pass1 = document.getElementById("pass1");
-            let pass2 = document.getElementById("pass2");
+                setTimeout(function () {
+                    location.href = location.origin + "/login";
+                }, 1000);
 
-            pass1.value = "";
-            pass2.value = "";
+            } else {
+                let pass1 = document.getElementById("pass1");
+                let pass2 = document.getElementById("pass2");
 
-            toast(response.error, "red");
-        }
-    })
-    .catch(error => {
-        console.log("Error: ", error);
-    });
+                pass1.value = "";
+                pass2.value = "";
+
+                toast(response.error, "#fc2d20");
+            }
+        })
+        .catch(error => {
+            console.log("Error: ", error);
+        });
 }
 
 function closeExpiredTokenModal() {
@@ -277,5 +277,53 @@ function closeExpiredTokenModal() {
 
     expiredTokenModal.remove();
 }
+
+function changeRol(oEvent) {
+    let uid = oEvent.getAttribute("data-valor");
+    let url = `http://localhost:8080/api/users/premium/${uid}/`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: []
+    })
+        .then(res =>
+            res.json()
+        )
+        .then(response => {
+            if (response.status === "Success") {
+                toast(response.Message, "#7bd5f5");
+
+                setTimeout(function () {
+                    logout();
+                }, 2000);
+            } else
+                toast(response.Message, "#fc2d20");
+        })
+        .catch(error =>
+            console.log("Error: ", error)
+        );
+}
+
+function logout() {
+    const url = 'http://localhost:8080/api/sessions/logout';
+
+    fetch(url)
+        .then(res => {
+            res.json()
+        })
+        .then(response => {
+            console.log('Datos recibidos:', response);
+        })
+        .catch(error => {
+            console.error('Hubo un problema con la solicitud Fetch', error);
+        });
+
+        
+    location.href = location.origin + "/login";
+}
+
 
 

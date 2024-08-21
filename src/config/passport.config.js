@@ -44,7 +44,17 @@ const initPassport = () => {
 
                     //let newCart = await cartManager.insertCart(); 
                     let newCart = await cartService.insertCart();
-                    let newUsuario = await userManager.createUser({nombre, apellido, edad, email, password, rol: "user", cart: newCart.payload._id});
+                    let newUsuario = await userManager.createUser({
+                        nombre, 
+                        apellido, 
+                        edad, 
+                        email, 
+                        password, 
+                        rol: "user", 
+                        cart: newCart.payload._id, 
+                        documents: [],
+                        status: false
+                    });
                     
                     return done(null, newUsuario);
                 } catch (error) {

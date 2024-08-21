@@ -3,6 +3,7 @@ const app = express();
 import { router as productsRouter } from './routers/products.router.js';
 import { router as cartsRouter } from './routers/carts.router.js';
 import { router as sessionsRouter } from './routers/sessions.router.js';
+import { router as usersRouter } from './routers/users.router.js';
 import { router as viewRouter }from "./routers/view.router.js";
 import passport from 'passport';
 import initPassport from './config/passport.config.js';
@@ -71,6 +72,7 @@ app.use("/api/products", (req, res, next) => {
 app.use("/api/carts", cartsRouter);
 
 app.use("/api/sessions", sessionsRouter);
+app.use("/api/users", usersRouter);
 
 app.use("/", viewRouter);
 

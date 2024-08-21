@@ -1,25 +1,41 @@
 import mongoose from "mongoose";
 
-const usuariosSchema = new mongoose.Schema({
-    nombre: String,
-    apellido: String,
-    edad: Number,
-    email:{
-        type:String,
-        unique: true
+const usuariosSchema = new mongoose.Schema(
+    {
+        nombre: String,
+        apellido: String,
+        edad: Number,
+        email:{
+            type:String,
+            unique: true
+        },
+        password: String,
+        rol: {
+            type: String,
+            default: "user"
+        },
+        cart: {
+            type: mongoose.Types.ObjectId, ref: "carts"
+        },
+        documents: {
+            type: Array,
+            default: [],
+            require: false
+        },
+        status: {
+            type: Boolean,
+            default: false
+        },
+        last_connection: {
+            type: Date,
+            default: new Date,
+            require: false
+        },
     },
-    password: String,
-    rol: {
-        type: String,
-        default: "user"
-    },
-    cart: {
-        type: mongoose.Types.ObjectId, ref: "carts"
-    },
-},
-{
-    timestamps: true, strict: false
-})
+    {
+        timestamps: true, strict: false
+    }
+)
  
  //1°Argumoento: nombre de la coleccíon | 2°Argumento: nombre del modelo
  export default mongoose.model("usuarios", usuariosSchema);

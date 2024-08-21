@@ -1,0 +1,23 @@
+{{>navBar}}
+<div>
+    <header class="flex-container">
+        <div class="col-10 item">
+            <h1 class="my-2 mb-3 ms-5 text-center"> Información necesaria para pasar a ser Premium:</h1>
+        </div>
+    </header>
+    <main class="flex-container">
+        <section class="col-10 flex-container">
+            <form action="/api/users/premium/{{ uid }}/documents" enctype="multipart/form-data" method="post">
+                <input type="file" class="form-control-file" name="uploaded_file" multiple>
+                <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers">
+               
+                <input type="text" name="web" value="web" hidden>
+                <br><br>
+                <input type="submit" value="Enviar archivos">
+            </form>
+        </section>
+    </main>
+    <footer></footer>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</div>

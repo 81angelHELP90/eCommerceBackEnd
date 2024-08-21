@@ -4,5 +4,6 @@ export class UsuariosDTO {
         this.email = user.email;
         this.rol = user.rol;
         this.idCart = user.cart;
+        this.idUser = user._id;
     }
 }

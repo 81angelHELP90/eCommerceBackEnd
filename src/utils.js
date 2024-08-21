@@ -2,11 +2,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from "crypto";
 import passport from "passport";
-import config from "./config/config.js"
+import config from "./config/config.js";
+import multer from "multer";
 import { faker } from '@faker-js/faker';
-
 import nodemailer from "nodemailer";
+import UserManagerdb from "../src/usuarioManagerDBHelper.js";
 
+const userManager = new UserManagerdb();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export const userConnectWebSocket = [];
@@ -91,3 +93,26 @@ export const sendMail = async (email) => {
     .then( respuesta => console.log("Correo enviado: ", respuesta.response))
     .catch( e => console.log("Error al enviar correo: ", e))
 }
+
+//Multer
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        file.mimetype.split("/")[0] === "image" ? cb(null, `${__dirname}/uploads/profiles`) : cb(null, `${__dirname}/uploads/documents`);
+    },
+    filename: function (req, file, cb) {
+        let src = file.mimetype.split("/")[0] === "image" ? `${__dirname}/uploads/profiles` : `${__dirname}/uploads/documents`;
+       
+        cb(null, Date.now() +"-"+file.originalname );
+
+        upDateUserDocumentsProperty(file.originalname, src, req.params.uid);
+    }
+});
+
+//Actuali Propiedad documents:
+const upDateUserDocumentsProperty = async (name, reference, _id) => {
+        //Seteo la propiedad: documents 
+        let objDocuments = { name: name , reference: reference};
+        await userManager.upDateUserInfo(null, _id, objDocuments);
+}
+
+export const upload = multer({ storage: storage })

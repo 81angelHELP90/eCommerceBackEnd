@@ -6,6 +6,7 @@ import config from "../config/config.js";
 import { sendMail, generaHash } from "../utils.js"
 import UserManagerdb from "../usuarioManagerDBHelper.js";
 import { UsuariosDTO as userDTO } from "../dto/usuariosDTO.js";
+import { helper } from "../helpers/helpers.js";
 
 const userManager = new UserManagerdb();
 
@@ -91,6 +92,44 @@ export const _changeUserPass = async (req, res) => {
 
     } catch (e) {
         let error = "Error al restablecer contraseña";
+        req.logger.error(`${error}: ${e}`);
+        res.status(401).json({error: error});
+    }
+}
+
+export const upDateUserRol = async (req, res) => {
+    try {
+        let uid = req.params.uid;
+        let usuario = await userManager.getUserById({_id: uid});
+       
+        if(usuario.documents.length > 1) 
+            if(helper.checkDocumentsToBePremium(usuario.documents)) {
+                let rolChange = {rol: "premium"} 
+                let modifiedPass = await userManager.upDateRol(usuario.email, rolChange);  
+
+                (modifiedPass.modifiedCount > 0) 
+                    ? res.status(201).json({ status: "Success", Message: "Felicitaciones, ahora es un usuario Premium" })
+                    : res.status(501).json({ status: "Error", Message: "No se ha terminado de procesar la documentación necesaria" });
+            } else 
+                res.status(501).json({ status: "Error", Message: "No se ha terminado de procesar la documentación necesaria" });
+        else
+            res.status(501).json({ status: "Error", Message: "No se ha terminado de procesar la documentación necesaria" });
+
+    } catch (e) {
+        let error = "Error al actualiar el rol del usuario";
+        req.logger.error(`${error}: ${e}`);
+        res.status(401).json({error: error});
+    }
+}
+
+export const uploadDocuments = async (req, res) => {
+    try {
+        let status = { status: true };
+        let upDateStatus = await userManager.upDateUserInfo(req.user.email, null, status);
+
+        res.status(201).json({success: "uploadDocuments."});
+    } catch (e) {
+        let error = "Error al guardar documentos";
         req.logger.error(`${error}: ${e}`);
         res.status(401).json({error: error});
     }

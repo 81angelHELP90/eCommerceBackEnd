@@ -11,6 +11,7 @@ import { UsuariosDTO as userDTO } from "../dto/usuariosDTO.js";
 import { CustomError } from "../handleErrors/customError.js";
 import { TIPOS_ERROR } from "../handleErrors/EErrors.js";
 import { checkArgumentos, checkUser } from "../handleErrors/userError.js";
+import { Logger } from "winston";
 
 //import io from "../app.js";
 
@@ -53,6 +54,11 @@ router.post("/login", async(req, res) => {
             //Creamos la cookies desde el back:
             res.cookie("Access_Cookie", token, {httpOnly: true});
             //httpOnly: solo envia la info si se accede desde una petición http - a traves de algun verbo http
+
+            //Seteo la propiedad: last_connection 
+            let lastConnection = {last_connection: new Date()}  
+            //let userId = _usuario.idUser;
+            let upDateLastConnection = await userManager.upDateUserInfo(email, null, lastConnection);
           
             if(web)
                 (_usuario.rol === "user") ? res.redirect("/productos") : res.redirect("/productos/admin");
@@ -82,7 +88,19 @@ router.get("/callBackGitHubE666", passport.authenticate("github", {failureRedire
     res.redirect("/productos");
 });
 
-router.get("/logout", (req, res)=>{
+router.get("/logout", async (req, res) => {
+    jwt.verify(req.cookies["Access_Cookie"], config.secretJwt, function(err, decored){
+        if(!err) {
+            let lastConnection = {last_connection: new Date()}  
+            let email = decored.mail;
+
+            userManager.upDateUserInfo(email, null, lastConnection)
+                .then(data => req.logger.info(`Ultima conección: ${lastConnection.last_connection}`)) 
+                .catch(error => req.logger.error("Error al actualizar ultima conección: "))
+        }
+        
+    });
+    
     req.session.destroy(e=>{
         if(e){
             console.log(error);

@@ -29,9 +29,10 @@ export const getProducts = async (req, res) => {
         //Desde el navegador:
         if(req.user && req.headers.referer && !req.headers.referer.includes("apiDocs")) {
             let cart = { _id: req.user.cart }
+            let userId = req.user._id;
 
             res.setHeader('Content-type','text/html');
-            res.status(201).render("products", { products, title,  cart});
+            res.status(201).render("products", { products, title, cart, userId});
         } else 
             res.status(201).json({ status: "success", payload: products });
     } catch (e) {

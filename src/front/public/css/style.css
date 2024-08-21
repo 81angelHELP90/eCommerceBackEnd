@@ -88,3 +88,7 @@
     width: 100vw;
     transition: all .5s;
 }
+
+#upLoadFile{
+    margin-top: 5px;
+}
