@@ -13,12 +13,12 @@ import { TIPOS_ERROR } from "../handleErrors/EErrors.js";
 import { checkArgumentos, checkUser } from "../handleErrors/userError.js";
 import { Logger } from "winston";
 
-//import io from "../app.js";
-
 //Registro 
-router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/error"}), async (req,res) => {
+router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/error"}), async (req,res, newUsuario) => {
+    let user = new userDTO(req.user);
+
     res.setHeader('Content-Type','application/json');
-    res.redirect("/login");
+    (req.body.web) ? res.redirect("/login") : res.status(201).json({payload: user});;
 });
 
 //Login 
@@ -42,22 +42,14 @@ router.post("/login", async(req, res) => {
         } else {
             usuario = {...usuario};
            
-            //Cuando uso Sessions:
-            //req.session.usuario = usuario;
-
-            //Para JWT: --aca habra que ver si el token expiro y si es asi volver a generarlo?
             let token = jwt.sign(usuario, config.secretJwt, {expiresIn: "2h"});
 
             //DTO
             let _usuario = new userDTO(usuario);    
-
-            //Creamos la cookies desde el back:
+            
             res.cookie("Access_Cookie", token, {httpOnly: true});
-            //httpOnly: solo envia la info si se accede desde una petición http - a traves de algun verbo http
 
-            //Seteo la propiedad: last_connection 
             let lastConnection = {last_connection: new Date()}  
-            //let userId = _usuario.idUser;
             let upDateLastConnection = await userManager.upDateUserInfo(email, null, lastConnection);
           
             if(web)
@@ -103,7 +95,6 @@ router.get("/logout", async (req, res) => {
     
     req.session.destroy(e=>{
         if(e){
-            console.log(error);
             res.setHeader('Content-Type','application/json');
             res.status(501).json(
                 {

@@ -37,5 +37,4 @@ const usuariosSchema = new mongoose.Schema(
     }
 )
  
- //1°Argumoento: nombre de la coleccíon | 2°Argumento: nombre del modelo
- export default mongoose.model("usuarios", usuariosSchema);
+export default mongoose.model("usuarios", usuariosSchema);

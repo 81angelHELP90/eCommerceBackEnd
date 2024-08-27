@@ -19,7 +19,6 @@ import { logger, middleLogger } from "./helpers/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 
-// Configurar cabeceras y cors
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
@@ -28,7 +27,6 @@ app.use((req, res, next) => {
     next();
 });
 
-//Configuración Swagger:
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0",
@@ -43,8 +41,6 @@ const swaggerOptions = {
 
 const spec = swaggerJSDoc(swaggerOptions);
 
-
-//Middelwares:
 app.use(express.json()); 
 app.use(middleLogger);
 app.use(express.urlencoded({extended: true}));
@@ -54,10 +50,9 @@ app.use(sessions({
     secret: "Hash#Hash123", resave: true, saveUninitialized: true
 }));
 
-//Paso: 2
 initPassport();
 app.use(passport.initialize());
-app.use(passport.session());  //Si usamos session como estrategia 
+app.use(passport.session()); 
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
@@ -78,12 +73,8 @@ app.use("/", viewRouter);
 
 app.use("/apiDocs", swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
 
-//app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(spec))
-
-//Aca se muestra el nivel info del logger porque configure a partir del nivel http:
 const serverHttp = app.listen(8080, function () { logger.info("Server run in port 8080 | " + "Environment: " + config.environment)} );
 
-//Db connection:
 const dbConector = async () => {
     try {
         await mongooseConnect.connect(
@@ -100,7 +91,7 @@ const dbConector = async () => {
 
 dbConector();
 
-const io = new Server(serverHttp); //Server WebSocket
+const io = new Server(serverHttp); 
 
 export default io;
 

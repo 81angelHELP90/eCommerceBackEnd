@@ -16,9 +16,6 @@ export const messageWebSocket = [];
 
 export default __dirname;
 
-//const SECRET = config.secretHas//"Hash#Hash123";
-//export const SECRETJWT = "JWT&SECRET#";
-
 export const generaHash = password => crypto.createHmac("sha256", config.secretHas).update(password).digest("hex");
 
 
@@ -66,7 +63,6 @@ export const generateProducs = async () => {
 
 //Send Mails:
 export const sendMail = async (email) => { 
-    //objeto Transporter: realiza la conexión con el servidor de correo
     const trasporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
@@ -77,7 +73,7 @@ export const sendMail = async (email) => {
         },
         tls: { rejectUnauthorized: false }
     });
-    //upDatePass
+    
     trasporter.sendMail({
         from: "Ecommers web..",
         to: email,
@@ -108,9 +104,7 @@ const storage = multer.diskStorage({
     }
 });
 
-//Actuali Propiedad documents:
 const upDateUserDocumentsProperty = async (name, reference, _id) => {
-        //Seteo la propiedad: documents 
         let objDocuments = { name: name , reference: reference};
         await userManager.upDateUserInfo(null, _id, objDocuments);
 }

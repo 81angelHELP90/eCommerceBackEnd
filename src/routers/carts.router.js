@@ -4,7 +4,6 @@ import { insertCart, getCartById, getAllCarts, addProducInCart } from "../contro
 import { passPortCall } from "../utils.js";
 import { handleRol } from "../middleware/roleAccessHandler.js";
 
-//##### MODELO VISTA CONTROLADOR ##### 
 //Insertar un carrito:
 router.post("/", passPortCall("current"), handleRol(["user"]), insertCart);
 

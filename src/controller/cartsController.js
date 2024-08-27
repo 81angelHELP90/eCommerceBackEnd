@@ -1,7 +1,6 @@
 import { cartService } from "../services/cartsService.js";
 import { helper } from "../helpers/helpers.js";
 import { ticketService } from "../services/ticketService.js"
-//import { cartsDTO } from "../dto/cartsDTO.js";
 
 import { productService } from "../services/productsService.js";
 
@@ -18,7 +17,7 @@ export const insertCart = async (req, res) => {
         res.status(401).json({ status: "error", message: "Error al intentar guardar" });
     }
 };
-//Creo que ya no sería necesario. Se utiliZa finallyPurchase
+
 export const getCartById = async (req, res) => {
     try {
         let cid = req.params.id;
@@ -32,7 +31,6 @@ export const getCartById = async (req, res) => {
             Cart.success && (req.user.cart === cid) ? res.status(201).render("cart", { cid, products }) : res.status(401).render("error", { error });
         } else 
             Cart.success && (req.user.cart === cid) ? res.status(201).json({ status: "success", payload: products }) : res.status(501).json({ status: "Error", Message: error });
-        //Fin Ahoar
     } catch (error) {
         console.log(error)
         res.status(401).json({ error: true, Message: "Error al obtener el carrito." });
@@ -43,13 +41,11 @@ export const finallyPurchase = async (req, res) => {
     try {
         let cid = req.params.id;
         let cart = await cartService.getCartById(cid);
-        //Productos del carrito:
         let products = cart.payload[0]?.productos;
         
         //Check Stock:
         if(products.length > 0) {
             for (let i = 0; i < products.length; i++) {
-                //Obtengo producto de la base: 
                 let productId = parseInt(products[i].idProd);
 
                 productService.getProductById(productId)
@@ -88,7 +84,6 @@ export const setTicket = async (req, res) => {
     let productsPurchase = req.body.cartObj.dataProducts;
     let purchaser = req.user.email;
     let cart = await cartService.getCartById(cid);
-    //Productos del carrito
     let productsCart = cart.payload[0]?.productos;
 
     //Actualio el stock de cada producto
@@ -102,8 +97,6 @@ export const setTicket = async (req, res) => {
                         let amount = helper.calTotalCart(productsPurchase, productsCart);
                         let purchaseInfo = helper.buildDataPurchase({amount, purchaser});
                         
-                        //Actulio carrito: ESTO CUANDO TODOS LOS PRODUCTOS DEL CARRITO SE PUDIERON PROCESAR:
-                        //ME FALTARIA LA PARTE DONDE FALLA (por falta de stock, por ejemplo) ALGUN PRODUCTO
                         cartService.upDateCart(cid, {productos: []})
                             .then(data => {
                                 //Creo y envio el ticket:

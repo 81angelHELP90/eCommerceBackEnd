@@ -6,7 +6,7 @@ export class CustomError {
         
         error.name = name;
         error.code = code;
-        error.stack = ""; //hago esto porque sino me impreme un "choclo" de info en la consola
+        error.stack = ""; 
 
         throw error;
     }

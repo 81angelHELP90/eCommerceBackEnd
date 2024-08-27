@@ -1,6 +1,5 @@
 import { Router } from "express";
 export const router = Router();
-//middleware auth para session: import auth from "../middleware/auth.js"
 import { passPortCall, userConnectWebSocket, messageWebSocket } from "../utils.js";
 import { getProductsAdmin, getProducts, realtimeProducts } from "../controller/productsController.js";
 import { getCartById, finallyPurchase, setTicket } from "../controller/cartsController.js";
@@ -10,14 +9,12 @@ import { handleRol } from "../middleware/roleAccessHandler.js";
 
 import io from "../app.js";
 
-//Home:
 router.get("/", (req, res) => {
     let title = "Home";
    
     res.status(201).render("home", { title });
 });
 
-//Login
 router.get("/login", (req, res) => {
     let title = "Ingreso";
     let changePass = false;
@@ -25,14 +22,13 @@ router.get("/login", (req, res) => {
 
     res.status(201).render("login", { title, changePass, jwtExpired });
 });
-//Registro
+
 router.get("/registro", (req, res) => {
     let title = "Registro";
 
     res.status(200).render("registro", { title });
 });
 
-//Perfil: middleware auth para session | middleware passPortCall para JWT
 router.get("/perfil", passPortCall("current"), (req, res) => {
     let title = "Perfil";
     //Para cuando uso session: let usuario = req.session.usuario;
@@ -44,27 +40,17 @@ router.get("/perfil", passPortCall("current"), (req, res) => {
     res.status(200).render("perfil", { title, usuario });
 });
 
-/*##### MODELO VISTA CONTROLADOR ##### */
-//Cart:  middleware auth para session | middleware passPortCall para JWT
 router.get("/cart/:id", passPortCall("current"), handleRol(["user"]), getCartById);
 
-//Finalizar compra:  middleware auth para session | middleware passPortCall para JWT
 router.get("/cart/:id/purchase", passPortCall("current"), handleRol(["user"]), finallyPurchase);
 
 router.post("/cart/purchase", passPortCall("current"), handleRol(["user"]), setTicket);
 
-//Productos: middleware auth para session | middleware passPortCall para JWT
 router.get("/productos", passPortCall("current"), handleRol(["user"]), getProducts);
 
-//router.get("/AdminProductos", passPortCall("current"), handleRol(["admin"]), getProducts);
-
-//Lista de productos disponibles - Admin
 router.get("/productos/admin", passPortCall("current"), handleRol(["admin", "premium"]), getProductsAdmin);
 
-//Cambios en Productos
 router.get("/realtimeproducts", passPortCall("current"), realtimeProducts);
-
-//router.get("/adminProducts", passPortCall("current"), handleRol(["admin"]), adminProducts);
 
 //Chat:
 router.get("/chat", passPortCall("current"), handleRol(["user"]), (req, res) => {
@@ -80,15 +66,12 @@ router.get("/chat", passPortCall("current"), handleRol(["user"]), (req, res) => 
                 socket.broadcast.emit("nuevoUsuario", userName);
             }
 
-            //Recibo
             socket.on("mensaje", (message, id) => {
                 let userEmisor = userConnectWebSocket.filter(user => user.id === id);
                
                 if(userEmisor.length > 0) {
-                    //historial de mensaje en memoria:
                     messageWebSocket.push({text: message, sendBy: userEmisor[0].name, date: new Date()});
 
-                    //Envio el nuevo mensajes a todos los usuarios conectados:
                     io.emit("nuevoMensaje", message, userEmisor[0].name);
                 }
             });

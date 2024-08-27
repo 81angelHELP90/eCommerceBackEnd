@@ -42,7 +42,6 @@ const initPassport = () => {
                     
                     password = generaHash(password);
 
-                    //let newCart = await cartManager.insertCart(); 
                     let newCart = await cartService.insertCart();
                     let newUsuario = await userManager.createUser({
                         nombre, 
@@ -54,7 +53,7 @@ const initPassport = () => {
                         cart: newCart.payload._id, 
                         documents: [],
                         status: false
-                    });
+                    }); 
                     
                     return done(null, newUsuario);
                 } catch (error) {
@@ -64,7 +63,7 @@ const initPassport = () => {
         )
     )
 
-    //Login: Autenticación por terceros: github : Paso 1
+    //Login: 
     passport.use(
         "github",
         new gitHub.Strategy(
@@ -86,7 +85,6 @@ const initPassport = () => {
                     if(existingUser)
                         return done(null, existingUser);
 
-                    //let newCart = await cartManager.insertCart();
                     let newCart = await cartService.insertCart();
                     let newUsuario = await userManager.createUser({nombre, email, profile, rol: "user", cart: newCart.payload._id});
                     
@@ -116,8 +114,6 @@ const initPassport = () => {
             }
         )
     )
-    
-    /*paso 1' (1 bis) - solo si usamos SESSIONS, configuro serializar / deserializer...*/
     
     passport.serializeUser((usuario, done) => {
         return done(null, usuario._id);

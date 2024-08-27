@@ -1,14 +1,9 @@
 import express from "express";
 export const router = express.Router();
-import { getMockProducts, getProductsAdmin, getProducts, insertProducs, getProductById, upDateProducts, deleteProducts } from "../controller/productsController.js";
-
+import { getMockProducts, getProductsAdmin, insertProducs, getProductById, upDateProducts, deleteProducts } from "../controller/productsController.js";
 import { passPortCall } from "../utils.js";
 import { handleRol, handleCrudProdByRol } from "../middleware/roleAccessHandler.js";
 
-//##### MODELO VISTA CONTROLADOR ##### 
-//Obtener todos los productos | Ejemplos: limit=5 -
-//router.get("/", passPortCall("current"), handleRol(["user"]), getProducts);
-//5-08-24router.get("/", getProducts);
 //Obtener Productos del SRV Mock:
 router.get("/mockingproducts", passPortCall("current"), handleRol(["user"]), getMockProducts);
 

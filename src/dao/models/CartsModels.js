@@ -13,6 +13,5 @@ const cartsSchema = new mongoose.Schema({
         }]
     },
 })
- 
- //1°Argumoento: nombre de la coleccíon | 2°Argumento:; nombre del modelo
- export default mongoose.model("carts", cartsSchema);
+
+export default mongoose.model("carts", cartsSchema);

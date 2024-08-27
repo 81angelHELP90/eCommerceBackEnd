@@ -34,11 +34,8 @@ export const recoveryPass = async (req, res) => {
             //DTO
             let _usuario = new userDTO(usuario);
             let userData = {user: _usuario.email, nombre: _usuario.nombre, rol: _usuario.rol}
-            
-            //Para JWT:
             let token = jwt.sign(userData, config.secretJwt, {expiresIn: "1h"});
             
-            //Creamos la cookies desde el back:
             res.cookie("Recovery_Cookie", token, {httpOnly: true});
 
             sendMail(_usuario.email);
@@ -55,7 +52,6 @@ export const recoveryPass = async (req, res) => {
 
 export const _setNewUserPass = async (req, res) => {
     jwt.verify(req.cookies.Recovery_Cookie, config.secretJwt, async (error, decoded) => {
-        //console.log("decoded: ", decoded)
         let jwtExpired = error?.message === "jwt expired";
         let title = error?.message !== "jwt expired" ? "Restablecer contraseña" :  "Ingreso";
         let changePass = error?.message !== "jwt expired";

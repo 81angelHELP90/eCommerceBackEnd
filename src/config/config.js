@@ -12,7 +12,7 @@ const mode = argumentos.mode;
 dotenv.config(
     {
         path: mode === "prod" ? "./src/.env.production" : "./src/.env.development",
-        override: true //Permite leer una variable desde el .env aun si exite en el SO
+        override: true 
     }
 )
 

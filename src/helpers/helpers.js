@@ -22,7 +22,6 @@ class Helper {
     checkAvailableStock = (cartProducts) => {
         try {
             return cartProducts.map(product => {
-                //Obtengo producto
                 let productId = parseInt(product.idProd);
 
                 if(!isNaN(productId)) {
@@ -60,7 +59,6 @@ class Helper {
         let documentCompDomicilio = false;
         let documentCompEstadoCuenta = false;
 
-        //No encuentro otra manera de corroborar que haya subido los archivos correctos mas que validar los nombres y extensión de los archivos
         documents.forEach(_document => {
             if(_document.name.toLocaleUpperCase() === "IDENTIFICACION.PDF")
                 documentIdentificacion = true;

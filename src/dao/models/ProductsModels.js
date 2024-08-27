@@ -36,5 +36,4 @@ const productsSchema = new mongoose.Schema({
 
 productsSchema.plugin(mongoosePaginate);
 
-//1°Argumoento: nombre de la coleccíon | 2°Argumento: nombre del modelo
 export default mongoose.model("productos", productsSchema);

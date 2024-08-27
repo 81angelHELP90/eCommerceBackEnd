@@ -1,11 +1,10 @@
-//import { tr } from "@faker-js/faker";
 import winston from "winston";
 import config from "../config/config.js";
 
 
 const loggerDev = new winston.transports.Console({
     level: "debug", 
-    format: winston.format.combine( //conbina diferentes formatos
+    format: winston.format.combine( 
         winston.format.timestamp(),
         winston.format.colorize(),
         winston.format.simple()
@@ -14,7 +13,7 @@ const loggerDev = new winston.transports.Console({
 
 const loggerProd = new winston.transports.Console({
     level: "info", 
-    format: winston.format.combine( //conbina diferentes formatos
+    format: winston.format.combine( 
         winston.format.timestamp(),
         winston.format.colorize(),
         winston.format.simple()
@@ -32,7 +31,6 @@ const loggerProdFile = new winston.transports.File({
 
 export const logger = winston.createLogger({});
 
-//definimos los trasportes (hacia donde logear la información) segun el entorno:
 if(config.environment === "prod") {
     logger.add(loggerProd);
     logger.add(loggerProdFile);
@@ -40,7 +38,6 @@ if(config.environment === "prod") {
     logger.add(loggerDev);
 
 
-//Configuro el middleware:
 export const middleLogger = (req, res, next) => {
     req.logger = logger; 
     next();

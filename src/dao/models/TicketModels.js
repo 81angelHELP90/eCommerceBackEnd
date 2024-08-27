@@ -24,5 +24,4 @@ const ticketSchema = new mongoose.Schema({
 
 ticketSchema.plugin(mongoosePaginate);
 
-//1°Argumoento: nombre de la coleccíon | 2°Argumento: nombre del modelo
 export default mongoose.model("ticket", ticketSchema);
